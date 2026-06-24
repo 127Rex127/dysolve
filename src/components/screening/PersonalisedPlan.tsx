@@ -67,7 +67,7 @@ export function PersonalisedPlan({ result, onApplySettings, onStartReading }: Pe
   return (
     <div
       className="min-h-screen px-4 pt-24 pb-16 relative"
-      style={{ backgroundImage: "url('/background.jpg')", backgroundSize: 'cover', backgroundAttachment: 'fixed', backgroundPosition: 'center' }}
+      style={{ backgroundImage: `url('${import.meta.env.BASE_URL}background.jpg')`, backgroundSize: 'cover', backgroundAttachment: 'fixed', backgroundPosition: 'center' }}
     >
       <div className="absolute inset-0 bg-white/60" />
 

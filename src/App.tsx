@@ -170,7 +170,7 @@ function AppInner() {
   return (
     <div
       className="min-h-screen font-sans dark:bg-slate-900"
-      style={{ backgroundImage: `url('${isDark ? '/dark_background.jpg' : '/background.jpg'}')`, backgroundSize: 'cover', backgroundAttachment: 'fixed', backgroundPosition: 'center' }}
+      style={{ backgroundImage: `url('${import.meta.env.BASE_URL}${isDark ? 'dark_background.jpg' : 'background.jpg'}')`, backgroundSize: 'cover', backgroundAttachment: 'fixed', backgroundPosition: 'center' }}
     >
       <Header
         hasText={!!displayText}

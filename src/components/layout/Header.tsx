@@ -25,7 +25,7 @@ export function Header({ hasText, onShowInput, onHome, onScreening, onTests, onO
           aria-label="Go to home page"
         >
           <img
-            src="/Logo.jpg"
+            src={import.meta.env.BASE_URL + 'Logo.jpg'}
             alt="Dysolve logo"
             className="w-11 h-11 rounded-full object-cover ring-2 ring-sky-200 shadow-md shrink-0"
           />
