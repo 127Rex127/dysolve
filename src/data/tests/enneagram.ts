@@ -1,0 +1,335 @@
+import type { TestDefinition } from './types'
+
+export const enneagramTest: TestDefinition = {
+  id: 'enneagram',
+  name: 'Enneagram',
+  tagline: 'Nine archetypal personality types',
+  description: 'The Enneagram is one of the most nuanced and psychologically rich personality frameworks. This simplified assessment identifies your primary Enneagram cluster across four core types based on your deepest motivations and fears. For full 9-type profiling, professional tools are recommended.',
+  category: 'personality',
+  scoringMode: 'typeTest',
+  typeDimensions: ['reformer', 'helper', 'achiever', 'thinker'],
+  timeMinutes: 8,
+  icon: '⭕',
+  color: 'from-purple-500 to-violet-600',
+  selectCount: 12,
+  typeInfo: {
+    reformer: {
+      name: 'The Reformer (Type 1)',
+      emoji: '⚖️',
+      description: 'You are principled, ethical, and driven by a deep desire to do what is right. You hold yourself and others to high standards, and you feel a constant inner calling to improve — yourself, others, and the world around you. Your inner critic is your most constant companion.',
+      strengths: [
+        'Deeply ethical — you act with integrity even when it\'s hard',
+        'Highly conscientious and thorough in everything you do',
+        'Strong sense of purpose and personal mission',
+        'Excellent at identifying what could be improved',
+        'Reliable, consistent, and deeply trustworthy',
+      ],
+      growthAreas: [
+        'Releasing the inner critic — you are enough as you are',
+        'Accepting imperfection — in yourself and others',
+        'Allowing yourself to relax and play without guilt',
+        'Balancing high standards with compassion for human fallibility',
+      ],
+      worksWith: 'Type 1s find deep meaning in work that contributes to justice, quality, or improvement. At your best, your commitment to integrity inspires everyone around you. Growth practice: each day, notice one thing that is "good enough" and let yourself enjoy it.',
+    },
+    helper: {
+      name: 'The Helper (Type 2)',
+      emoji: '❤️',
+      description: 'You are warm, generous, and deeply attuned to others\' needs. You feel most fulfilled when you are making a positive difference in people\'s lives, and you naturally pour energy and love into those around you. Your fear is of being unloved or unwanted.',
+      strengths: [
+        'Exceptionally empathetic and emotionally intuitive',
+        'Naturally generous — you give without being asked',
+        'Creates warm, safe spaces for others to be vulnerable',
+        'Strong at building and maintaining deep relationships',
+        'Energised by making a tangible difference to those you love',
+      ],
+      growthAreas: [
+        'Recognising and expressing your own needs without guilt',
+        'Giving without expecting recognition or love in return',
+        'Understanding that saying "no" is an act of love, not rejection',
+        'Building identity beyond your role as the helper',
+      ],
+      worksWith: 'Type 2s flourish in caregiving, teaching, and supportive roles. The deepest growth for a 2 comes from learning to receive as generously as you give. Practice: each week, ask for something you need. Let others help you.',
+    },
+    achiever: {
+      name: 'The Achiever (Type 3)',
+      emoji: '🏆',
+      description: 'You are driven, adaptable, and deeply motivated by success and recognition. You are excellent at reading what a situation requires and becoming exactly that. You are energetic, efficient, and inspiring to be around. Your deepest fear is worthlessness or failure.',
+      strengths: [
+        'Highly motivated and goal-oriented',
+        'Excellent at adapting to any role or environment',
+        'Inspires others with energy, confidence, and results',
+        'Highly capable of achieving anything you set your mind to',
+        'Natural leader who makes success look effortless',
+      ],
+      growthAreas: [
+        'Separating your worth from your achievements',
+        'Slowing down enough to feel, not just do',
+        'Showing authentic vulnerability rather than a polished image',
+        'Connecting with what truly matters to you, not just what impresses others',
+      ],
+      worksWith: 'Type 3s create impact in leadership, entrepreneurship, and any role that rewards excellence. Growth practice: spend time doing something purely for enjoyment with no goal or audience. Let yourself be seen without performance.',
+    },
+    thinker: {
+      name: 'The Thinker (Type 5)',
+      emoji: '🧠',
+      description: 'You are curious, insightful, and profoundly independent. You observe the world with extraordinary depth and build rich, complex inner lives. You value knowledge, privacy, and understanding above almost everything else. You fear being overwhelmed or incompetent.',
+      strengths: [
+        'Brilliant analytical mind with extraordinary depth of thought',
+        'Highly independent and self-sufficient thinker',
+        'Sees patterns and connections others miss entirely',
+        'Deep expertise in the areas that captivate you',
+        'Calm and rational in situations that overwhelm others',
+      ],
+      growthAreas: [
+        'Engaging with the world more — sharing your insights with others',
+        'Tolerating emotional demands without withdrawing',
+        'Moving from observation into action and engagement',
+        'Building comfort with being present in your body, not just your mind',
+      ],
+      worksWith: 'Type 5s excel in research, technology, philosophy, and fields that reward deep expertise. Growth practice: regularly share one idea or insight with someone. The world needs what you know — don\'t keep it only for yourself.',
+    },
+  },
+  questions: [
+    {
+      id: 1,
+      text: 'At your core, you are most driven by:',
+      options: [
+        'The need to do things correctly and make the world better',
+        'The need to be loved and to give love to others',
+        'The need to achieve, succeed, and be seen as capable',
+        'The need to understand, know, and maintain inner privacy',
+      ],
+    },
+    {
+      id: 2,
+      text: 'Your deepest fear is:',
+      options: [
+        'Being flawed, wrong, or corrupt',
+        'Being unwanted, unloved, or unnecessary',
+        'Being a failure or worthless',
+        'Being helpless, overwhelmed, or incompetent',
+      ],
+    },
+    {
+      id: 3,
+      text: 'Which statement resonates most strongly with you?',
+      options: [
+        '"There is always a better way, and I feel compelled to find it."',
+        '"I find deep fulfilment in giving to others."',
+        '"I adapt naturally to what any situation needs from me."',
+        '"I observe and understand — I need time and space to think."',
+      ],
+    },
+    {
+      id: 4,
+      text: 'When you are stressed, you tend to:',
+      options: [
+        'Become more critical — of yourself and others',
+        'Become people-pleasing and lose yourself in others\' needs',
+        'Push harder, work longer, and present an even more polished front',
+        'Withdraw further into solitude and mental activity',
+      ],
+    },
+    {
+      id: 5,
+      text: 'Your greatest personal strength is:',
+      options: [
+        'Your integrity — you live by your values, always',
+        'Your ability to sense what others need and meet them there',
+        'Your drive — you accomplish what others only dream about',
+        'Your mind — you understand things at a depth few can match',
+      ],
+    },
+    {
+      id: 6,
+      text: 'Which role feels most natural to you in a group?',
+      options: [
+        'The quality check — making sure standards are met',
+        'The emotional backbone — caring for everyone\'s wellbeing',
+        'The leader — setting direction and driving results',
+        'The expert — providing knowledge and analytical depth',
+      ],
+    },
+    {
+      id: 7,
+      text: 'People who know you well would describe you as:',
+      options: [
+        'Principled, conscientious, and sometimes perfectionistic',
+        'Warm, generous, and deeply caring',
+        'Ambitious, confident, and highly capable',
+        'Private, perceptive, and intellectually deep',
+      ],
+    },
+    {
+      id: 8,
+      text: 'What do you find hardest in close relationships?',
+      options: [
+        'When others don\'t share your standards or values',
+        'When your love and care isn\'t reciprocated or appreciated',
+        'Being seen as less capable or successful than you want to appear',
+        'The emotional demands and loss of your private inner world',
+      ],
+    },
+    {
+      id: 9,
+      text: 'When you achieve something great, your first feeling is usually:',
+      options: [
+        'Brief satisfaction — but already seeing how it could have been better',
+        'Joy that it helped or pleased others',
+        'Pride and relief — though already focused on the next goal',
+        'Quiet, private satisfaction — you rarely need external acknowledgement',
+      ],
+    },
+    {
+      id: 10,
+      text: 'Which inner struggle is most familiar to you?',
+      options: [
+        'The relentless inner critic — nothing is ever quite good enough',
+        'Losing yourself in others\' needs while your own go unmet',
+        'Feeling your worth is tied entirely to what you achieve',
+        'Protecting your inner world while feeling increasingly isolated',
+      ],
+    },
+    {
+      id: 11,
+      text: 'When you are at your very best, you are:',
+      options: [
+        'Wise, discerning, and a beacon of integrity',
+        'Unconditionally loving and deeply nurturing',
+        'Inspirational, authentic, and genuinely motivating',
+        'Visionary, pioneering, and intellectually brilliant',
+      ],
+    },
+    {
+      id: 12,
+      text: 'How do you spend your downtime?',
+      options: [
+        'Improving something — a skill, your home, or a process',
+        'Being with people you love and making them feel valued',
+        'Working on goals, side projects, or self-improvement',
+        'Reading, researching, or diving deep into something you find fascinating',
+      ],
+    },
+    {
+      id: 13,
+      text: 'What kind of work gives you the most meaning?',
+      options: [
+        'Work that improves systems, quality, or justice',
+        'Work that directly helps people',
+        'Work where your talent and effort are clearly seen and rewarded',
+        'Work where deep knowledge and independent expertise are valued',
+      ],
+    },
+    {
+      id: 14,
+      text: 'What do you most want from others in your life?',
+      options: [
+        'Respect for your standards and recognition of your efforts',
+        'Love, appreciation, and genuine connection',
+        'Admiration for what you\'ve achieved and belief in your potential',
+        'Space, respect for your privacy, and meaningful intellectual exchange',
+      ],
+    },
+    {
+      id: 15,
+      text: 'Which phrase captures your relationship with the world?',
+      options: [
+        '"The world would be better if people tried harder to do things right."',
+        '"Life has more meaning when lived in service to others."',
+        '"You can achieve anything if you want it enough."',
+        '"The more you understand, the freer you become."',
+      ],
+    },
+    {
+      id: 16,
+      text: 'When you make a significant mistake, you:',
+      options: [
+        'Struggle to forgive yourself — your standards are high',
+        'Worry most about how it affected others',
+        'Reframe it quickly and focus on what you\'ll do differently',
+        'Analyse it thoroughly to understand exactly what went wrong',
+      ],
+    },
+    {
+      id: 17,
+      text: 'In your personal life, you most need to work on:',
+      options: [
+        'Accepting that perfection is not possible or necessary',
+        'Knowing what you want independent of what others need',
+        'Connecting with who you are beyond your achievements',
+        'Allowing others in and sharing more of your inner world',
+      ],
+    },
+    {
+      id: 18,
+      text: 'Which environment makes you feel most alive?',
+      options: [
+        'Somewhere orderly, purposeful, and aligned with your values',
+        'Somewhere warm, full of people you love',
+        'Somewhere you are performing, leading, or being seen at your best',
+        'Somewhere quiet, stimulating, and rich with knowledge',
+      ],
+    },
+    {
+      id: 19,
+      text: 'When someone criticises you, you most commonly:',
+      options: [
+        'Take it very seriously — your standards and integrity matter deeply',
+        'Feel hurt — you want to be seen as good and caring',
+        'Defend your image — criticism of your work feels personal',
+        'Analyse the feedback rationally, but withdraw to process it privately',
+      ],
+    },
+    {
+      id: 20,
+      text: 'Your most treasured personal quality is:',
+      options: [
+        'Your integrity and commitment to doing the right thing',
+        'Your heart — your capacity to love and give',
+        'Your drive and ability to turn ambition into reality',
+        'Your mind and depth of understanding',
+      ],
+    },
+    {
+      id: 21,
+      text: 'What feels like your deepest purpose in life?',
+      options: [
+        'To be good, to improve things, and to leave the world better',
+        'To love and be loved in return — to truly matter to others',
+        'To achieve, to make your mark, and to be admired',
+        'To understand — to know truth at its deepest level',
+      ],
+    },
+    {
+      id: 22,
+      text: 'When you sense a conflict brewing, you:',
+      options: [
+        'Feel compelled to correct what is wrong or unfair',
+        'Focus on smoothing it over and restoring warmth',
+        'Address it quickly and strategically to move forward',
+        'Observe from a distance and prefer to stay uninvolved',
+      ],
+    },
+    {
+      id: 23,
+      text: 'Which childhood experience might you relate to most?',
+      options: [
+        'Being praised for being "good" and criticised for mistakes',
+        'Feeling that love was earned through being helpful or needed',
+        'Being valued most when you performed, succeeded, or impressed',
+        'Preferring your private inner world to social demands',
+      ],
+    },
+    {
+      id: 24,
+      text: 'What does "a good life" look like to you?',
+      options: [
+        'A life of integrity, purpose, and genuine positive impact',
+        'A life full of deep, loving, meaningful relationships',
+        'A life of achievement, recognition, and lasting success',
+        'A life of knowledge, understanding, and intellectual freedom',
+      ],
+    },
+  ],
+}

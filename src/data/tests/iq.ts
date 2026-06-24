@@ -1,0 +1,118 @@
+import type { TestDefinition } from './types'
+
+export const iqTest: TestDefinition = {
+  id: 'iq',
+  name: 'IQ Cognitive Assessment',
+  tagline: 'Measure your reasoning & problem-solving',
+  description: 'Tests verbal, numerical, spatial, and logical reasoning across 15 questions. Results give an estimated cognitive profile — not a certified IQ score.',
+  category: 'cognitive',
+  scoringMode: 'rightWrong',
+  timeMinutes: 12,
+  icon: '🧠',
+  color: 'from-purple-500 to-indigo-600',
+  disclaimer: 'This is an educational screening tool, not a certified psychometric assessment. Official IQ scores require administration by a qualified professional.',
+  resultBands: [
+    { min: 0,  max: 39, label: 'Below Average',    description: 'You may benefit from more practice with reasoning puzzles and number tasks.', color: 'bg-red-50',    textColor: 'text-red-700' },
+    { min: 40, max: 59, label: 'Low Average',       description: 'You got several questions right. Keep practising — pattern recognition improves with exposure.', color: 'bg-orange-50', textColor: 'text-orange-700' },
+    { min: 60, max: 79, label: 'Average',           description: 'A solid result — you handled a good range of reasoning tasks well.', color: 'bg-yellow-50', textColor: 'text-yellow-700' },
+    { min: 80, max: 92, label: 'Above Average',     description: 'Strong performance. You demonstrated good pattern recognition, logic, and verbal reasoning.', color: 'bg-green-50',  textColor: 'text-green-700' },
+    { min: 93, max: 100, label: 'Exceptional',      description: 'Excellent result. You solved most questions correctly across all reasoning categories.', color: 'bg-sky-50',   textColor: 'text-sky-700' },
+  ],
+  questions: [
+    {
+      id: 1,
+      text: 'What comes next in this number sequence?\n2 · 4 · 8 · 16 · ___',
+      options: ['18', '24', '32', '64'],
+      correctIndex: 2,
+    },
+    {
+      id: 2,
+      text: 'Which word does NOT belong with the others?',
+      options: ['Apple', 'Orange', 'Carrot', 'Grape'],
+      correctIndex: 2,
+    },
+    {
+      id: 3,
+      text: 'Hot is to Cold as Day is to ___',
+      options: ['Sun', 'Bright', 'Night', 'Week'],
+      correctIndex: 2,
+    },
+    {
+      id: 4,
+      text: 'What comes next?\n3 · 6 · 11 · 18 · 27 · ___',
+      options: ['34', '36', '38', '40'],
+      correctIndex: 2,
+    },
+    {
+      id: 5,
+      text: 'All mammals are animals. A dolphin is a mammal. Therefore:',
+      options: [
+        'All animals are dolphins',
+        'Some animals are mammals',
+        'A dolphin is an animal',
+        'Mammals are not animals',
+      ],
+      correctIndex: 2,
+    },
+    {
+      id: 6,
+      text: 'Pen is to Writer as Brush is to ___',
+      options: ['Canvas', 'Paint', 'Palette', 'Painter'],
+      correctIndex: 3,
+    },
+    {
+      id: 7,
+      text: 'Which number does NOT belong?\n4 · 9 · 16 · 24 · 25 · 36',
+      options: ['9', '16', '24', '36'],
+      correctIndex: 2,
+    },
+    {
+      id: 8,
+      text: 'What is 15% of 200?',
+      options: ['20', '25', '30', '35'],
+      correctIndex: 2,
+    },
+    {
+      id: 9,
+      text: 'What comes next in the Fibonacci sequence?\n1 · 1 · 2 · 3 · 5 · 8 · ___',
+      options: ['11', '12', '13', '14'],
+      correctIndex: 2,
+    },
+    {
+      id: 10,
+      text: 'Mary is taller than Jane. Jane is taller than Sue. Who is the shortest?',
+      options: ['Mary', 'Jane', 'Sue', 'Cannot tell'],
+      correctIndex: 2,
+    },
+    {
+      id: 11,
+      text: 'A square has 4 sides. A pentagon has 5. An octagon has ___',
+      options: ['6', '7', '8', '9'],
+      correctIndex: 2,
+    },
+    {
+      id: 12,
+      text: 'If 5 machines make 5 parts in 5 minutes, how many minutes do 100 machines need to make 100 parts?',
+      options: ['1', '5', '100', '500'],
+      correctIndex: 1,
+    },
+    {
+      id: 13,
+      text: 'What comes next?\n2 · 6 · 12 · 20 · 30 · ___',
+      options: ['38', '40', '42', '44'],
+      correctIndex: 2,
+    },
+    {
+      id: 14,
+      text: 'Which word means the opposite of "benevolent"?',
+      options: ['Generous', 'Malicious', 'Charitable', 'Neutral'],
+      correctIndex: 1,
+    },
+    {
+      id: 15,
+      text: 'A bat and ball cost £1.10 total. The bat costs £1 more than the ball. How much does the ball cost?',
+      options: ['10p', '5p', '15p', '20p'],
+      correctIndex: 1,
+    },
+  ],
+}

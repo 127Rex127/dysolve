@@ -1,0 +1,142 @@
+import type { TestDefinition } from './types'
+
+export const englishTest: TestDefinition = {
+  id: 'english',
+  name: 'English & Verbal Reasoning',
+  tagline: 'Vocabulary, grammar & language comprehension',
+  description: '15 questions across vocabulary, grammar, reading comprehension, and verbal reasoning. Designed for English speakers at all levels.',
+  category: 'academic',
+  scoringMode: 'rightWrong',
+  timeMinutes: 10,
+  icon: '📚',
+  color: 'from-emerald-500 to-teal-600',
+  resultBands: [
+    { min: 0,  max: 39, label: 'Foundational',  description: 'Focus on building vocabulary and basic grammar rules — both improve quickly with consistent reading.', color: 'bg-red-50',    textColor: 'text-red-700' },
+    { min: 40, max: 59, label: 'Developing',    description: 'You have a workable base. Practise more complex grammar and expand your vocabulary.', color: 'bg-orange-50', textColor: 'text-orange-700' },
+    { min: 60, max: 79, label: 'Competent',     description: 'Good command of English. You handled most language challenges well.', color: 'bg-yellow-50', textColor: 'text-yellow-700' },
+    { min: 80, max: 92, label: 'Proficient',    description: 'Strong verbal skills. You showed solid grammar, vocabulary, and comprehension ability.', color: 'bg-green-50',  textColor: 'text-green-700' },
+    { min: 93, max: 100, label: 'Advanced',     description: 'Excellent — you demonstrated a sophisticated command of English language and reasoning.', color: 'bg-sky-50',   textColor: 'text-sky-700' },
+  ],
+  questions: [
+    {
+      id: 1,
+      text: 'Which word is a synonym for "happy"?',
+      options: ['Gloomy', 'Fatigued', 'Elated', 'Timid'],
+      correctIndex: 2,
+    },
+    {
+      id: 2,
+      text: 'Which sentence is grammatically correct?',
+      options: [
+        'She don\'t like it.',
+        'She doesn\'t likes it.',
+        'She doesn\'t like it.',
+        'She don\'t likes it.',
+      ],
+      correctIndex: 2,
+    },
+    {
+      id: 3,
+      text: 'What is the correct plural of "cactus"?',
+      options: ['Cactuses', 'Cactii', 'Cacti', 'Cactuss'],
+      correctIndex: 2,
+    },
+    {
+      id: 4,
+      text: 'Which word means "to make worse"?',
+      options: ['Alleviate', 'Exacerbate', 'Mitigate', 'Ameliorate'],
+      correctIndex: 1,
+    },
+    {
+      id: 5,
+      text: '"The cat sat on the mat." — What is the subject of this sentence?',
+      options: ['Sat', 'On the mat', 'The cat', 'The mat'],
+      correctIndex: 2,
+    },
+    {
+      id: 6,
+      text: 'Choose the correct word:\n"___ going to the park."',
+      options: ['Their', 'There', 'They\'re', 'Theyre'],
+      correctIndex: 2,
+    },
+    {
+      id: 7,
+      text: 'What does "verbose" mean?',
+      options: [
+        'Speaking clearly and concisely',
+        'Using more words than necessary',
+        'Refusing to communicate',
+        'Speaking too quietly',
+      ],
+      correctIndex: 1,
+    },
+    {
+      id: 8,
+      text: 'What is the antonym (opposite) of "magnanimous"?',
+      options: ['Generous', 'Noble', 'Petty', 'Forgiving'],
+      correctIndex: 2,
+    },
+    {
+      id: 9,
+      text: 'Which of the following is NOT a conjunction?',
+      options: ['Because', 'Although', 'Quickly', 'However'],
+      correctIndex: 2,
+    },
+    {
+      id: 10,
+      text: 'Which phrase is a metaphor?',
+      options: [
+        'She ran as fast as the wind.',
+        'The moon was bright.',
+        'Time is a thief.',
+        'He smiled at her.',
+      ],
+      correctIndex: 2,
+    },
+    {
+      id: 11,
+      text: 'What is the past tense of "lie" (meaning to recline)?',
+      options: ['Lied', 'Lay', 'Lain', 'Lying'],
+      correctIndex: 1,
+    },
+    {
+      id: 12,
+      text: 'What does "ambiguous" mean?',
+      options: [
+        'Completely clear and obvious',
+        'Having more than one possible meaning',
+        'Strongly opinionated',
+        'Impossible to understand',
+      ],
+      correctIndex: 1,
+    },
+    {
+      id: 13,
+      text: '"Running down the street, the rain soaked her."\nWhat is wrong with this sentence?',
+      options: [
+        'Wrong verb tense',
+        'Missing comma',
+        'Dangling modifier — the rain is not running',
+        'Subject-verb disagreement',
+      ],
+      correctIndex: 2,
+    },
+    {
+      id: 14,
+      text: '"I couldn\'t care less" means:',
+      options: [
+        'I care a little bit',
+        'I care quite a lot',
+        'I don\'t care at all',
+        'I wish I cared more',
+      ],
+      correctIndex: 2,
+    },
+    {
+      id: 15,
+      text: 'Which is the correct spelling?',
+      options: ['Accomodate', 'Acommodate', 'Accommodate', 'Accomodate'],
+      correctIndex: 2,
+    },
+  ],
+}

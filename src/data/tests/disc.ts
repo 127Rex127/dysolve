@@ -1,0 +1,335 @@
+import type { TestDefinition } from './types'
+
+export const discTest: TestDefinition = {
+  id: 'disc',
+  name: 'DISC Assessment',
+  tagline: 'Dominance, Influence, Steadiness, Conscientiousness',
+  description: 'The DISC model maps your natural behavioural style across four dimensions: Dominant (results-focused), Influential (people-focused), Steady (team-focused), and Conscientious (quality-focused). 12 scenarios, each revealing your natural instincts.',
+  category: 'behavioral',
+  scoringMode: 'typeTest',
+  typeDimensions: ['dominance', 'influence', 'steadiness', 'conscientiousness'],
+  timeMinutes: 8,
+  icon: '💎',
+  color: 'from-blue-500 to-cyan-600',
+  selectCount: 12,
+  typeInfo: {
+    dominance: {
+      name: 'Dominant (D)',
+      emoji: '🦁',
+      description: 'You are a natural driver — direct, decisive, and results-oriented. You take charge in challenges, cut through complexity, and focus on outcomes above all else. Your energy is contagious and your boldness gets things done.',
+      strengths: [
+        'Decisive under pressure — you make calls when others hesitate',
+        'Goal-oriented and highly competitive',
+        'Natural leader in fast-moving, high-stakes situations',
+        'Fearless about difficult conversations',
+        'Turns obstacles into opportunities quickly',
+      ],
+      growthAreas: [
+        'Slowing down to listen to others\' perspectives',
+        'Being patient with detail-oriented processes',
+        'Acknowledging team members\' emotional needs',
+        'Accepting that consensus sometimes creates better outcomes',
+      ],
+      worksWith: 'You work exceptionally well with Steady (S) types who balance your pace, and Conscientious (C) types who ensure your decisions are well-grounded. Be mindful that Influential (I) types may energise you but can slow execution.',
+    },
+    influence: {
+      name: 'Influential (I)',
+      emoji: '🌟',
+      description: 'You are a natural connector — enthusiastic, persuasive, and people-oriented. You thrive in collaborative environments, inspire others with your energy, and bring ideas to life through communication. Your optimism and charisma make people want to follow you.',
+      strengths: [
+        'Highly persuasive — you can bring people around to ideas',
+        'Energises and motivates those around you',
+        'Creative collaborator who thrives in brainstorming',
+        'Builds relationships and trust quickly',
+        'Excellent communicator across all levels',
+      ],
+      growthAreas: [
+        'Following through on commitments once the excitement fades',
+        'Focusing on details and accuracy',
+        'Managing time and staying organised',
+        'Listening as much as you talk',
+      ],
+      worksWith: 'You complement Conscientious (C) types who ground your ideas in data, and Dominant (D) types who help push ideas forward. Steady (S) types can help you pace yourself and deepen relationships.',
+    },
+    steadiness: {
+      name: 'Steady (S)',
+      emoji: '🌿',
+      description: 'You are a natural supporter — patient, reliable, and team-focused. You create stability, build deep loyalty, and help others feel heard. Your consistency and warmth are the glue that holds teams together through turbulent times.',
+      strengths: [
+        'Incredibly loyal and reliable team member',
+        'Patient listener who makes others feel valued',
+        'Excellent at building long-term relationships',
+        'Steady and calm in difficult or high-pressure situations',
+        'Collaborative and consensus-building by nature',
+      ],
+      growthAreas: [
+        'Speaking up assertively when you disagree',
+        'Embracing change and uncertainty',
+        'Delegating — you can take on too much to avoid conflict',
+        'Setting boundaries to avoid being taken advantage of',
+      ],
+      worksWith: 'You bring out the best in Dominant (D) types by grounding their energy, and in Influential (I) types by providing follow-through. Pair with Conscientious (C) types for meticulous, sustainable work.',
+    },
+    conscientiousness: {
+      name: 'Conscientious (C)',
+      emoji: '🔬',
+      description: 'You are a natural analyst — precise, quality-driven, and systematic. You think deeply before acting, hold yourself to high standards, and ensure decisions are well-founded. Your rigour elevates everything you touch.',
+      strengths: [
+        'Meticulous attention to detail and accuracy',
+        'Systematic thinker — you build reliable processes',
+        'High personal standards and quality focus',
+        'Excellent at analysis and research',
+        'Calm, logical problem-solver',
+      ],
+      growthAreas: [
+        'Acting before you have perfect information',
+        'Being comfortable with ambiguity',
+        'Accepting that "good enough" is sometimes the right call',
+        'Delegating — your high standards can make this hard',
+      ],
+      worksWith: 'You work well with Influential (I) types who bring the people energy you may lack, and Dominant (D) types who help you take decisive action on your research. Steady (S) types share your collaborative nature.',
+    },
+  },
+  questions: [
+    {
+      id: 1,
+      text: 'When facing a major challenge at work, your first instinct is to:',
+      options: [
+        'Take charge immediately and drive toward a solution',
+        'Rally people together and generate energy around solving it',
+        'Make sure everyone feels supported and heard',
+        'Gather all the facts before making any move',
+      ],
+    },
+    {
+      id: 2,
+      text: 'Your colleagues would most likely describe you as:',
+      options: [
+        'Direct and results-driven',
+        'Enthusiastic and inspiring',
+        'Reliable and approachable',
+        'Thorough and precise',
+      ],
+    },
+    {
+      id: 3,
+      text: 'In a team meeting that is going in circles, you:',
+      options: [
+        'Step in and push for a decision',
+        'Suggest a new creative angle to re-energise the discussion',
+        'Check in with quieter members to make sure no one is left out',
+        'Ask for more data before committing to anything',
+      ],
+    },
+    {
+      id: 4,
+      text: 'When given a new project, you prefer to:',
+      options: [
+        'Set ambitious goals and move fast',
+        'Brainstorm with others and get people excited',
+        'Plan carefully and keep everyone aligned',
+        'Research thoroughly to understand every detail first',
+      ],
+    },
+    {
+      id: 5,
+      text: 'Under pressure, you tend to:',
+      options: [
+        'Make quick decisions and push harder',
+        'Seek out people to discuss options with',
+        'Stay calm and focus on keeping stability',
+        'Work through the problem systematically and methodically',
+      ],
+    },
+    {
+      id: 6,
+      text: 'The biggest frustration you have with others is when they:',
+      options: [
+        'Are too slow to make decisions',
+        'Lack enthusiasm or vision',
+        'Ignore how decisions affect people',
+        'Rush decisions without proper analysis',
+      ],
+    },
+    {
+      id: 7,
+      text: 'What motivates you most at work?',
+      options: [
+        'Winning, achieving goals, and being in control',
+        'Recognition, collaboration, and social connection',
+        'Harmony, stability, and team success',
+        'Accuracy, quality, and doing things right',
+      ],
+    },
+    {
+      id: 8,
+      text: 'When giving feedback to a colleague, you tend to:',
+      options: [
+        'Be direct and get straight to the point',
+        'Frame it positively and keep the energy upbeat',
+        'Choose your moment carefully to avoid upsetting them',
+        'Back it up with specific examples and evidence',
+      ],
+    },
+    {
+      id: 9,
+      text: 'Your ideal working environment is:',
+      options: [
+        'Fast-paced, autonomous, high-stakes',
+        'Collaborative, creative, socially energised',
+        'Stable, supportive, focused on teamwork',
+        'Structured, precise, with clear processes',
+      ],
+    },
+    {
+      id: 10,
+      text: 'When something goes wrong on a project, you:',
+      options: [
+        'Identify who is responsible and fix it fast',
+        'Bring the team together to brainstorm recovery options',
+        'Focus on reassuring the team and restoring calm',
+        'Conduct a thorough analysis to understand what went wrong',
+      ],
+    },
+    {
+      id: 11,
+      text: 'How do you typically make important decisions?',
+      options: [
+        'Trust your gut and act quickly',
+        'Talk it through with others and consider the feel',
+        'Take time to make sure everyone agrees',
+        'Review all available information carefully',
+      ],
+    },
+    {
+      id: 12,
+      text: 'When learning something new, you prefer:',
+      options: [
+        'Diving in and figuring it out through action',
+        'Discussing it with others and exploring ideas together',
+        'A gradual, supportive approach with clear guidance',
+        'Reading detailed documentation and following structured steps',
+      ],
+    },
+    {
+      id: 13,
+      text: 'In a conflict situation, you typically:',
+      options: [
+        'Confront it head-on and push for resolution',
+        'Use humour and warmth to defuse the tension',
+        'Mediate and find a compromise that works for everyone',
+        'Analyse the root cause and propose a logical resolution',
+      ],
+    },
+    {
+      id: 14,
+      text: 'What do you value most in a leader?',
+      options: [
+        'Vision, decisiveness, and the courage to act',
+        'Charisma, empathy, and the ability to inspire',
+        'Reliability, fairness, and genuine care for the team',
+        'Expertise, careful planning, and high standards',
+      ],
+    },
+    {
+      id: 15,
+      text: 'When presenting ideas to others, you focus most on:',
+      options: [
+        'The end result and why it\'s the winning move',
+        'The excitement, the story, and getting people on board',
+        'The impact on the team and how everyone will be supported',
+        'The evidence, the data, and the logical reasoning',
+      ],
+    },
+    {
+      id: 16,
+      text: 'How do you respond to change?',
+      options: [
+        'You embrace it — change means opportunity',
+        'You get excited — change brings new possibilities and people',
+        'You prefer gradual transitions with time to adjust',
+        'You need to understand the reasoning and plan fully before committing',
+      ],
+    },
+    {
+      id: 17,
+      text: 'When working on a team, your main contribution is:',
+      options: [
+        'Driving momentum and making things happen',
+        'Keeping energy high and making it fun',
+        'Holding the team together and supporting everyone',
+        'Ensuring quality and thoroughness in everything',
+      ],
+    },
+    {
+      id: 18,
+      text: 'How do you handle deadlines?',
+      options: [
+        'You set aggressive targets and push hard to meet them',
+        'You work best with social accountability — telling others keeps you on track',
+        'You prefer steady, consistent progress over rushing at the end',
+        'You plan meticulously and track every milestone',
+      ],
+    },
+    {
+      id: 19,
+      text: 'What kind of tasks energise you most?',
+      options: [
+        'High-stakes decisions and competitive challenges',
+        'Brainstorming, pitching, and connecting with people',
+        'Helping others, building consensus, sustaining quality',
+        'Deep research, analysis, and perfecting details',
+      ],
+    },
+    {
+      id: 20,
+      text: 'When you are at your best, people see you as:',
+      options: [
+        'Bold, confident, and laser-focused on results',
+        'Warm, energetic, and genuinely inspiring',
+        'Dependable, patient, and deeply trustworthy',
+        'Methodical, expert, and impeccably thorough',
+      ],
+    },
+    {
+      id: 21,
+      text: 'How important is being liked by your colleagues to you?',
+      options: [
+        'Less important than getting results — respect matters more',
+        'Very important — you want to be popular and connected',
+        'Very important — harmony and belonging matter deeply',
+        'Somewhat important, but integrity and accuracy come first',
+      ],
+    },
+    {
+      id: 22,
+      text: 'Your biggest strength under pressure is:',
+      options: [
+        'Laser focus on outcomes — you cut noise and act',
+        'Rallying others and keeping morale up',
+        'Staying calm and keeping the team grounded',
+        'Methodically working through the problem',
+      ],
+    },
+    {
+      id: 23,
+      text: 'When a colleague makes a mistake, you:',
+      options: [
+        'Point it out directly and quickly redirect them',
+        'Address it with warmth and keep the relationship intact',
+        'Support them through it without making them feel bad',
+        'Review what went wrong so it doesn\'t happen again',
+      ],
+    },
+    {
+      id: 24,
+      text: 'You feel most accomplished when you:',
+      options: [
+        'Achieve a challenging goal others said was impossible',
+        'Inspire a group to believe in something bigger',
+        'See your team thriving and feel genuine harmony',
+        'Deliver something accurate, complete, and excellent',
+      ],
+    },
+  ],
+}

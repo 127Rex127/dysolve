@@ -1,0 +1,122 @@
+import type { TestDefinition } from './types'
+
+export const logicTest: TestDefinition = {
+  id: 'logic',
+  name: 'Logic & Reasoning',
+  tagline: 'Deduction, patterns & critical thinking',
+  description: '15 questions testing deductive reasoning, pattern recognition, probability thinking, and lateral problem-solving.',
+  category: 'cognitive',
+  scoringMode: 'rightWrong',
+  timeMinutes: 12,
+  icon: '🔍',
+  color: 'from-violet-500 to-purple-600',
+  resultBands: [
+    { min: 0,  max: 39, label: 'Developing',    description: 'Logic puzzles can be learned — try practising with syllogisms and number sequences daily.', color: 'bg-red-50',    textColor: 'text-red-700' },
+    { min: 40, max: 59, label: 'Average',        description: 'You can follow most reasoning chains but some patterns were tricky. Keep practising lateral thinking.', color: 'bg-orange-50', textColor: 'text-orange-700' },
+    { min: 60, max: 79, label: 'Good',           description: 'You think logically and caught most of the pattern traps — nice work.', color: 'bg-yellow-50', textColor: 'text-yellow-700' },
+    { min: 80, max: 92, label: 'Sharp',          description: 'Strong logical reasoning. You avoided the intuition traps and worked through problems carefully.', color: 'bg-green-50',  textColor: 'text-green-700' },
+    { min: 93, max: 100, label: 'Exceptional',   description: 'Outstanding. You solved even the counter-intuitive problems — logical thinking is a real strength.', color: 'bg-sky-50',   textColor: 'text-sky-700' },
+  ],
+  questions: [
+    {
+      id: 1,
+      text: 'All A are B. All B are C. Therefore:',
+      options: ['All C are A', 'All B are A', 'All A are C', 'Some A are not C'],
+      correctIndex: 2,
+    },
+    {
+      id: 2,
+      text: 'If the day before yesterday was Wednesday, what day is tomorrow?',
+      options: ['Thursday', 'Friday', 'Saturday', 'Sunday'],
+      correctIndex: 2,
+    },
+    {
+      id: 3,
+      text: 'What comes next in the sequence?\nA · C · E · G · ___',
+      options: ['H', 'I', 'J', 'K'],
+      correctIndex: 1,
+    },
+    {
+      id: 4,
+      text: 'A bat and ball cost £1.10. The bat costs £1 more than the ball. How much does the ball cost?\n(Think carefully — the intuitive answer is wrong.)',
+      options: ['10p', '5p', '15p', '50p'],
+      correctIndex: 1,
+    },
+    {
+      id: 5,
+      text: 'You have three boxes: one labelled "Apples", one "Oranges", one "Mixed". All three labels are wrong. You pick one fruit from the "Mixed" box and it\'s an apple. What is in the "Apples" box?',
+      options: ['Apples', 'Oranges', 'Mixed', 'Cannot tell'],
+      correctIndex: 1,
+    },
+    {
+      id: 6,
+      text: '3 people take 3 days to dig 3 holes. How many days does 1 person need to dig 1 hole?',
+      options: ['1 day', '2 days', '3 days', '9 days'],
+      correctIndex: 2,
+    },
+    {
+      id: 7,
+      text: 'No fish are mammals. All dolphins are fish. Therefore:',
+      options: [
+        'All dolphins are mammals',
+        'Some mammals are dolphins',
+        'No dolphins are mammals',
+        'Some dolphins are mammals',
+      ],
+      correctIndex: 2,
+    },
+    {
+      id: 8,
+      text: 'What is the next number?\n1 · 4 · 9 · 16 · 25 · ___',
+      options: ['30', '34', '36', '49'],
+      correctIndex: 2,
+    },
+    {
+      id: 9,
+      text: 'You flip a fair coin and get heads 5 times in a row. What is the chance of heads on the next flip?',
+      options: ['Less than 50%', 'Exactly 50%', 'More than 50%', 'It depends on the coin'],
+      correctIndex: 1,
+    },
+    {
+      id: 10,
+      text: 'If 5 apples cost £2.50, what do 7 apples cost?',
+      options: ['£3.00', '£3.25', '£3.50', '£4.00'],
+      correctIndex: 2,
+    },
+    {
+      id: 11,
+      text: 'A clock shows 3:15. Which statement about the angle between the hands is true?',
+      options: [
+        'The hands are at exactly 90°',
+        'The hands are at 7.5° (the hour hand has moved past 3)',
+        'The hands are perfectly aligned',
+        'The hands are at 45°',
+      ],
+      correctIndex: 1,
+    },
+    {
+      id: 12,
+      text: 'If you rearrange the letters "CIFAIPC", you get the name of:',
+      options: ['A country', 'A city', 'An ocean', 'A river'],
+      correctIndex: 2,
+    },
+    {
+      id: 13,
+      text: 'A snail is at the bottom of a 10m well. Each day it climbs 3m; each night it slides back 2m. How many days to reach the top?',
+      options: ['7 days', '8 days', '9 days', '10 days'],
+      correctIndex: 1,
+    },
+    {
+      id: 14,
+      text: 'Maria says: "I have two children. At least one is a girl." What is the probability that both are girls?',
+      options: ['1/4', '1/3', '1/2', '2/3'],
+      correctIndex: 1,
+    },
+    {
+      id: 15,
+      text: 'Which shape does NOT belong?\n(Think about how many lines of symmetry each has.)\nCircle · Square · Equilateral Triangle · Scalene Triangle',
+      options: ['Circle', 'Square', 'Equilateral Triangle', 'Scalene Triangle'],
+      correctIndex: 3,
+    },
+  ],
+}

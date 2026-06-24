@@ -1,0 +1,37 @@
+import type { TestDefinition } from './types'
+
+export const mathTest: TestDefinition = {
+  id: 'math',
+  name: 'Mathematics Skills',
+  tagline: 'Arithmetic, algebra & applied maths',
+  description: '15 questions covering arithmetic, percentages, algebra, geometry, and applied problem-solving. No calculator — mental maths only.',
+  category: 'academic',
+  scoringMode: 'rightWrong',
+  timeMinutes: 12,
+  icon: '📐',
+  color: 'from-blue-500 to-cyan-600',
+  resultBands: [
+    { min: 0,  max: 39, label: 'Needs Improvement', description: 'Several areas to work on. Review basic arithmetic, fractions, and percentages first.', color: 'bg-red-50',    textColor: 'text-red-700' },
+    { min: 40, max: 59, label: 'Basic',              description: 'You have foundational skills but some areas need strengthening — algebra and word problems especially.', color: 'bg-orange-50', textColor: 'text-orange-700' },
+    { min: 60, max: 79, label: 'Competent',          description: 'A solid maths performance. Most everyday and academic maths is within your reach.', color: 'bg-yellow-50', textColor: 'text-yellow-700' },
+    { min: 80, max: 92, label: 'Proficient',         description: 'Strong maths skills across arithmetic, algebra, and applied problems.', color: 'bg-green-50',  textColor: 'text-green-700' },
+    { min: 93, max: 100, label: 'Advanced',          description: 'Excellent — you handled everything, including the trickier applied problems, very well.', color: 'bg-sky-50',   textColor: 'text-sky-700' },
+  ],
+  questions: [
+    { id: 1,  text: '7 × 8 = ?', options: ['54', '56', '58', '64'], correctIndex: 1 },
+    { id: 2,  text: 'What is 25% of 80?', options: ['16', '18', '20', '24'], correctIndex: 2 },
+    { id: 3,  text: '144 ÷ 12 = ?', options: ['11', '12', '13', '14'], correctIndex: 1 },
+    { id: 4,  text: 'If x + 5 = 13, what is x?', options: ['6', '7', '8', '9'], correctIndex: 2 },
+    { id: 5,  text: 'What is the area of a rectangle 6 cm wide and 4 cm tall?', options: ['20 cm²', '22 cm²', '24 cm²', '28 cm²'], correctIndex: 2 },
+    { id: 6,  text: 'What is the next prime number after 11?', options: ['12', '13', '14', '15'], correctIndex: 1 },
+    { id: 7,  text: '2³ + 3² = ?', options: ['13', '15', '17', '19'], correctIndex: 2 },
+    { id: 8,  text: 'A car travels at 60 km/h for 2.5 hours. How far does it go?', options: ['120 km', '140 km', '150 km', '160 km'], correctIndex: 2 },
+    { id: 9,  text: 'What is the median of: 3, 7, 2, 9, 4?', options: ['3', '4', '5', '7'], correctIndex: 1 },
+    { id: 10, text: '√64 = ?', options: ['6', '7', '8', '9'], correctIndex: 2 },
+    { id: 11, text: 'What is 15% of 300?', options: ['40', '42', '45', '50'], correctIndex: 2 },
+    { id: 12, text: 'If 3y = 21, what is y?', options: ['5', '6', '7', '8'], correctIndex: 2 },
+    { id: 13, text: 'What is the perimeter of a square with side length 5 cm?', options: ['15 cm', '20 cm', '25 cm', '30 cm'], correctIndex: 1 },
+    { id: 14, text: '0.5 × 0.4 = ?', options: ['0.09', '0.2', '0.45', '2'], correctIndex: 1 },
+    { id: 15, text: 'A shop sells 3 items for £12. How much do 5 items cost?', options: ['£18', '£19', '£20', '£22'], correctIndex: 2 },
+  ],
+}

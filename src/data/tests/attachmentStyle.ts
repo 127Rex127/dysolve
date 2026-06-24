@@ -1,0 +1,335 @@
+import type { TestDefinition } from './types'
+
+export const attachmentStyleTest: TestDefinition = {
+  id: 'attachmentStyle',
+  name: 'Attachment Style',
+  tagline: 'Secure, anxious, avoidant & disorganised',
+  description: 'Based on decades of psychological research, this assessment explores how you relate in close relationships — with partners, friends, and family. Understanding your attachment style can transform how you connect with others.',
+  category: 'emotional',
+  scoringMode: 'typeTest',
+  typeDimensions: ['secure', 'anxious', 'avoidant', 'disorganized'],
+  timeMinutes: 8,
+  icon: '🔗',
+  color: 'from-rose-500 to-pink-600',
+  disclaimer: 'This assessment is for self-reflection and education only. Attachment styles exist on a spectrum and can shift over time with awareness and support. This is not a clinical diagnosis.',
+  selectCount: 12,
+  typeInfo: {
+    secure: {
+      name: 'Secure',
+      emoji: '💚',
+      description: 'You have a secure attachment style — you are comfortable with intimacy and equally comfortable with independence. You trust others and yourself, communicate needs directly, and recover from conflict without excessive distress. You are the relationship "safe harbour" that others gravitate toward.',
+      strengths: [
+        'Comfortable giving and receiving love without fear',
+        'Communicates needs clearly and without games',
+        'Trusts partners and manages jealousy well',
+        'Recovers from disagreements with relative ease',
+        'Supports a partner\'s independence while staying connected',
+      ],
+      growthAreas: [
+        'Can sometimes underestimate partners who struggle with insecurity',
+        'May not fully appreciate the depth of others\' relationship anxiety',
+        'Maintaining attentiveness when a partner needs extra reassurance',
+      ],
+      worksWith: 'Secure types can form healthy relationships with all attachment styles — and can help anxious or avoidant partners gradually move toward greater security. Your natural steadiness is a powerful gift.',
+    },
+    anxious: {
+      name: 'Anxious',
+      emoji: '💛',
+      description: 'You have an anxious attachment style — you crave deep closeness but fear that others won\'t love you as much as you love them. You may seek reassurance often, read into small cues, and feel intense emotional highs and lows in relationships. This isn\'t a flaw — it\'s a learned response, and it can shift.',
+      strengths: [
+        'Deeply empathetic and attuned to others\' emotions',
+        'Invests fully and passionately in relationships',
+        'Highly aware of relationship dynamics',
+        'Strong desire for genuine intimacy and connection',
+        'Often very caring and generous in love',
+      ],
+      growthAreas: [
+        'Building self-worth independent of relationship validation',
+        'Tolerating uncertainty without seeking constant reassurance',
+        'Recognising when your fears are distorting reality',
+        'Communicating needs without escalation',
+      ],
+      worksWith: 'Secure partners can provide the consistent warmth that helps anxious types feel safe. Try to avoid anxious-avoidant pairings, which can create painful push-pull dynamics. Therapy and mindfulness can dramatically ease anxious attachment over time.',
+    },
+    avoidant: {
+      name: 'Avoidant',
+      emoji: '💙',
+      description: 'You have an avoidant attachment style — you value your independence deeply and may feel uncomfortable with too much closeness or emotional demands. You may pull back when things get intense, keep your feelings to yourself, and crave connection but fear being overwhelmed by it.',
+      strengths: [
+        'Highly self-reliant and emotionally independent',
+        'Rarely overwhelmed by others\' emotional needs',
+        'Brings calm and rationality to emotionally charged situations',
+        'Honest about needing space — no game-playing',
+        'Deep thinker about relationships and self',
+      ],
+      growthAreas: [
+        'Opening up emotionally and allowing vulnerability',
+        'Staying present during conflict rather than withdrawing',
+        'Recognising that needing others is not weakness',
+        'Communicating openly rather than going quiet',
+      ],
+      worksWith: 'Secure partners are your best match — they give you space without abandoning you. Be aware that anxious partners may trigger your withdrawal instincts. Therapy focusing on vulnerability and emotional communication can be transformative.',
+    },
+    disorganized: {
+      name: 'Disorganised',
+      emoji: '🌪️',
+      description: 'You have a disorganised (or fearful-avoidant) attachment style — you both crave and fear close relationships. You may feel confused or conflicted about intimacy, swinging between wanting closeness and pushing people away. This style often develops from early experiences of unpredictable relationships, and healing is very much possible.',
+      strengths: [
+        'Deeply self-aware once you understand your patterns',
+        'Capable of extraordinary empathy and depth',
+        'Strong motivation to heal and grow once the pattern is recognised',
+        'Creative, complex thinker about human connection',
+        'Great capacity for meaningful relationships once trust is established',
+      ],
+      growthAreas: [
+        'Learning to tolerate intimacy without panic or retreat',
+        'Building consistent self-regulation strategies',
+        'Recognising triggers and pausing before reacting',
+        'Seeking therapeutic support — this style benefits most from professional help',
+      ],
+      worksWith: 'Working with a therapist who specialises in attachment trauma can create profound, lasting change. Secure partners and patient, emotionally mature people can be healing presences. This is the attachment style that benefits most from consistent, gentle relational experiences.',
+    },
+  },
+  questions: [
+    {
+      id: 1,
+      text: 'When you start getting close to someone, you typically:',
+      options: [
+        'Feel comfortable and open — closeness feels natural',
+        'Feel excited but worry whether they feel the same intensity',
+        'Start to feel a bit smothered and need more space',
+        'Feel both excited and scared — you want closeness but fear getting hurt',
+      ],
+    },
+    {
+      id: 2,
+      text: 'When someone you care about is busy or doesn\'t respond to messages for a while, you:',
+      options: [
+        'Trust they\'ll get back to you — you don\'t overthink it',
+        'Start to worry they\'re upset with you or losing interest',
+        'Feel relieved — you enjoy the space',
+        'Feel anxious and then angry at yourself for caring so much',
+      ],
+    },
+    {
+      id: 3,
+      text: 'After an argument with someone close to you, you:',
+      options: [
+        'Address it calmly and move forward once resolved',
+        'Feel intense and need reassurance that everything is okay',
+        'Pull back and need time alone before reconnecting',
+        'Feel confused — sometimes you want to fix it, sometimes you want to run',
+      ],
+    },
+    {
+      id: 4,
+      text: 'When expressing your feelings in a relationship, you:',
+      options: [
+        'Share openly and comfortably — vulnerability feels okay',
+        'Share a lot and often — feelings pour out, sometimes overwhelmingly',
+        'Keep a lot to yourself — expressing deep feelings feels uncomfortable',
+        'Vary a lot — sometimes you open up fully, sometimes shut down completely',
+      ],
+    },
+    {
+      id: 5,
+      text: 'How do you feel about depending on others?',
+      options: [
+        'Comfortable — you know when to lean on people and when to stand alone',
+        'You want to depend on others but fear they won\'t be there',
+        'Uncomfortable — you prefer to handle things yourself',
+        'Conflicted — you want support but fear it will disappear',
+      ],
+    },
+    {
+      id: 6,
+      text: 'When a relationship gets very close and intimate, you:',
+      options: [
+        'Feel at home — deep intimacy is something you treasure',
+        'Feel a little anxious that it might not last or they might leave',
+        'Start to feel the need for more personal space',
+        'Sometimes feel overwhelmed even when you desperately wanted the closeness',
+      ],
+    },
+    {
+      id: 7,
+      text: 'Which statement feels most true about you?',
+      options: [
+        'I find it relatively easy to get close to others and trust them',
+        'I worry that people I care about don\'t love me as much as I love them',
+        'I prefer not to rely on others and value my independence highly',
+        'I want very close relationships but find myself pushing people away',
+      ],
+    },
+    {
+      id: 8,
+      text: 'When someone withdraws or seems distant, you:',
+      options: [
+        'Give them space and trust it will pass',
+        'Pursue them — you need to resolve the distance immediately',
+        'Feel relieved — it gives you breathing room',
+        'Feel panicked and then tell yourself not to care, repeatedly',
+      ],
+    },
+    {
+      id: 9,
+      text: 'How do you approach commitment in relationships?',
+      options: [
+        'You embrace it — commitment feels safe and exciting',
+        'You want it deeply but fear being abandoned once you commit',
+        'You hesitate — commitment can feel like losing freedom',
+        'You desire it but also fear it — you may sabotage it as it gets closer',
+      ],
+    },
+    {
+      id: 10,
+      text: 'Your relationship with self-worth is best described as:',
+      options: [
+        'Generally stable — you feel okay about yourself regardless of others\' opinions',
+        'Often tied to how much others love or approve of you',
+        'Largely internal — you don\'t need external validation to feel good',
+        'Unpredictable — you can feel confident then suddenly worthless',
+      ],
+    },
+    {
+      id: 11,
+      text: 'When someone does something that upsets you in a relationship, you:',
+      options: [
+        'Bring it up calmly and directly',
+        'Bring it up emotionally — you need them to understand how much it affected you',
+        'Say nothing — it feels easier to let it go',
+        'Oscillate between wanting to discuss it and wanting to disappear',
+      ],
+    },
+    {
+      id: 12,
+      text: 'How do you feel about the idea of a truly vulnerable, open relationship?',
+      options: [
+        'Appealing — authentic intimacy is what makes relationships meaningful',
+        'Appealing but frightening — you want it but fear being hurt',
+        'Somewhat uncomfortable — too much exposure feels risky',
+        'Deeply wanted but terrifying — you have tried and been hurt badly before',
+      ],
+    },
+    {
+      id: 13,
+      text: 'In your past relationships, you have most often experienced:',
+      options: [
+        'Generally healthy patterns — good communication and mutual care',
+        'Intense highs and lows — lots of love but lots of worry',
+        'Maintaining distance — needing space, partners feeling you were cold',
+        'Confusing patterns — cycling between closeness and withdrawal',
+      ],
+    },
+    {
+      id: 14,
+      text: 'When someone genuinely loves and appreciates you, you:',
+      options: [
+        'Accept it warmly and feel grateful',
+        'Feel wonderful but quickly worry it might not last',
+        'Feel slightly uncomfortable — it can feel like pressure',
+        'Feel both moved and uneasy — sometimes you pull away at this moment',
+      ],
+    },
+    {
+      id: 15,
+      text: 'When thinking about your early family relationships, you would say they were:',
+      options: [
+        'Generally warm, consistent, and safe',
+        'Sometimes inconsistent — you couldn\'t always predict if love would be there',
+        'Somewhat emotionally distant — independence was valued over closeness',
+        'Unpredictable or frightening — sometimes loving, sometimes painful',
+      ],
+    },
+    {
+      id: 16,
+      text: 'How do you handle someone who pulls away from you emotionally?',
+      options: [
+        'You give them space and check in gently when you feel ready',
+        'You pursue them and seek reassurance that everything is okay',
+        'You respect it — you probably need space too',
+        'You feel confused and might alternate between chasing and withdrawing yourself',
+      ],
+    },
+    {
+      id: 17,
+      text: 'The thought "People always leave eventually" makes you feel:',
+      options: [
+        'Rarely crosses your mind — you trust relationships',
+        'A deep familiar fear — it\'s often on your mind',
+        'Somewhat indifferent — you\'ll be fine alone',
+        'A painful mixture of truth and terror',
+      ],
+    },
+    {
+      id: 18,
+      text: 'When you imagine a perfectly loving, stable relationship, it feels:',
+      options: [
+        'Completely realistic and something you can build',
+        'Wonderful to imagine but hard to believe it will happen for you',
+        'Slightly suffocating if it means constant closeness',
+        'Desperately wanted but almost impossible to believe in',
+      ],
+    },
+    {
+      id: 19,
+      text: 'After a breakup or friendship loss, you typically:',
+      options: [
+        'Grieve, heal, and eventually feel whole again',
+        'Feel devastated and find it hard to move on for a long time',
+        'Feel relieved or numb — you move on independently',
+        'Alternate between devastation and feeling strangely okay, unpredictably',
+      ],
+    },
+    {
+      id: 20,
+      text: 'The phrase "I need you" from someone close to you makes you feel:',
+      options: [
+        'Warm — being needed is a privilege',
+        'Needed and loved — exactly what you want to feel',
+        'A little pressured — you value independence in both yourself and others',
+        'Mixed — part of you loves it, part of you wants to flee',
+      ],
+    },
+    {
+      id: 21,
+      text: 'Your biggest relationship pattern is:',
+      options: [
+        'Building healthy, lasting connections',
+        'Loving deeply but worrying constantly',
+        'Keeping emotional distance to protect yourself',
+        'Wanting closeness but finding ways to push it away',
+      ],
+    },
+    {
+      id: 22,
+      text: 'When you meet someone new and exciting, your inner experience is:',
+      options: [
+        'Excited and open — you enjoy getting to know people',
+        'Excited but immediately analysing signs of how much they like you',
+        'Interested but wanting to keep things casual until you know more',
+        'Intensely drawn in and then suddenly unsure — it fluctuates rapidly',
+      ],
+    },
+    {
+      id: 23,
+      text: 'If a close relationship ended, what would feel hardest?',
+      options: [
+        'The loss of a person you genuinely care about',
+        'The fear that you were not enough and they found someone better',
+        'The loss of your space being "invaded" rather than the person themselves',
+        'Not being able to make sense of your own feelings about it',
+      ],
+    },
+    {
+      id: 24,
+      text: 'What do you most need from a close relationship to feel safe?',
+      options: [
+        'Mutual respect, communication, and room for both closeness and space',
+        'Consistent reassurance and proof that you are loved and valued',
+        'Respect for your independence and no emotional pressure',
+        'Predictability and patience — you need to trust slowly',
+      ],
+    },
+  ],
+}
