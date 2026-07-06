@@ -267,7 +267,7 @@ function AppInner() {
         />
       )}
 
-      <FocusWindow focusWindow={focusWindow} onDragStart={handleDragStart} />
+      {view === 'reader' && <FocusWindow focusWindow={focusWindow} onDragStart={handleDragStart} />}
 
       {showPreferences && (
         <PreferencesModal
