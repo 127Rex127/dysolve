@@ -91,7 +91,7 @@ function AppInner() {
     availableVoices, selectedVoiceURI, setVoiceURI,
   } = useTTS(displayText, t.ttsLangCode, ttsRate)
   const { focusWindow, setEnabled, setStripHeight, setYPosition, handleDragStart } = useFocusWindow()
-  const { activeSoundId, volume: soundVolume, play: playSound, stop: stopSound, setVolume: setSoundVolume } = useAmbientSound()
+  const { activeSoundId, volume: soundVolume, play: playSound, stop: stopSound, setVolume: setSoundVolume, error: soundError } = useAmbientSound()
 
   // Keyboard shortcuts: Space = play/pause TTS, Escape = stop, ? = shortcuts modal
   useEffect(() => {
@@ -169,7 +169,7 @@ function AppInner() {
 
   return (
     <div
-      className="min-h-screen font-sans dark:bg-slate-900"
+      className="min-h-screen font-sans dark:bg-slate-900 overflow-x-hidden"
       style={{ backgroundImage: `url('${import.meta.env.BASE_URL}${isDark ? 'dark_background.jpg' : 'background.jpg'}')`, backgroundSize: 'cover', backgroundAttachment: 'fixed', backgroundPosition: 'center' }}
     >
       <Header
@@ -225,7 +225,7 @@ function AppInner() {
       {view === 'reader' && <ReadingProgress />}
 
       {view === 'reader' && wordCount > 0 && (
-        <div className={`fixed top-[4.25rem] left-0 z-30 flex justify-end px-8 py-1 pointer-events-none transition-all duration-300 ${sidebarOpen ? 'right-80' : 'right-0'}`}>
+        <div className={`fixed top-[4.25rem] left-0 z-30 flex justify-end px-4 sm:px-8 py-1 pointer-events-none transition-all duration-300 ${sidebarOpen ? 'sm:right-80 right-0' : 'right-0'}`}>
           <span className="text-xs text-slate-400 bg-white/60 backdrop-blur-sm px-2 py-0.5 rounded-full">
             {wordCount.toLocaleString()} {t.sidebar.wordsLabel ?? 'words'} · ~{readingMinutes} {t.sidebar.minLabel ?? 'min'}
           </span>
@@ -233,7 +233,7 @@ function AppInner() {
       )}
 
       {view === 'reader' && (
-        <div data-testid="reader-container" className={`transition-all duration-300 ${sidebarOpen ? 'mr-80' : 'mr-0'}`}>
+        <div data-testid="reader-container" className={`transition-all duration-300 ${sidebarOpen ? 'sm:mr-80 mr-0' : 'mr-0'}`}>
           <ReaderView
             text={displayText}
             settings={settings}
@@ -244,6 +244,20 @@ function AppInner() {
             onTextChange={setDisplayText}
           />
         </div>
+      )}
+
+      {/* Mobile settings FAB — only shows on small screens when sidebar is closed */}
+      {view === 'reader' && !sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          className="sm:hidden fixed bottom-6 right-4 z-40 w-12 h-12 flex items-center justify-center rounded-full bg-sky-500 text-white shadow-lg hover:bg-sky-600 active:scale-95 transition-all"
+          aria-label="Open settings"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
       )}
 
       {/* Flashcard trigger button */}
@@ -306,6 +320,7 @@ function AppInner() {
           onPlaySound={playSound}
           onStopSound={stopSound}
           onSoundVolume={setSoundVolume}
+          soundError={soundError}
           boldModeEnabled={boldModeEnabled}
           onBoldModeToggle={setBoldModeEnabled}
           followTTS={followTTS}

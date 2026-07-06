@@ -17,15 +17,20 @@ function pickGradient(keyword: string): string {
   return GRADIENTS[(keyword.charCodeAt(0) ?? 0) % GRADIENTS.length]
 }
 
-async function fetchWikipediaImage(keyword: string): Promise<string | null> {
+// Search Wikipedia for an image matching the top keywords (much more reliable than direct page lookup)
+async function fetchSmartImage(keywords: string[]): Promise<string | null> {
+  if (!keywords.length) return null
+  const query = keywords.slice(0, 3).join(' ')
   try {
     const res = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(keyword)}`,
-      { signal: AbortSignal.timeout(5000) }
+      `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(query)}&prop=pageimages&piprop=thumbnail&pithumbsize=800&format=json&origin=*&gsrlimit=5`,
+      { signal: AbortSignal.timeout(6000) }
     )
     if (!res.ok) return null
     const data = await res.json()
-    return data.thumbnail?.source ?? null
+    const pages = Object.values(data.query?.pages ?? {}) as Array<{ thumbnail?: { source: string } }>
+    const withImage = pages.find(p => p.thumbnail?.source)
+    return withImage?.thumbnail?.source ?? null
   } catch {
     return null
   }
@@ -40,10 +45,11 @@ interface PopupState {
 interface SummaryModalProps {
   summary: string
   keywords: string[]
+  isAI?: boolean
   onClose: () => void
 }
 
-export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) {
+export function SummaryModal({ summary, keywords, isAI = false, onClose }: SummaryModalProps) {
   const { t } = useLanguage()
   const s = t.sidebar
   const [mode, setMode] = useState<'illustrated' | 'plain'>('illustrated')
@@ -58,7 +64,7 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
     setImageUrl(null)
     setImgFailed(false)
     if (keywords.length === 0) return
-    fetchWikipediaImage(keywords[0]).then(url => setImageUrl(url))
+    fetchSmartImage(keywords).then(url => setImageUrl(url))
   }, [keywords])
 
   useEffect(() => {
@@ -76,7 +82,6 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
 
   const showImage = mode === 'illustrated' && imageUrl && !imgFailed
 
-  // Split summary into clickable word spans
   function ClickableText({ text }: { text: string }) {
     return (
       <>
@@ -98,16 +103,16 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
   }
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-8">
+    <div className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center sm:p-8 p-0">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => { if (!popup) onClose() }} />
 
-      {/* Card */}
-      <div className="relative w-full max-w-xl max-h-[90vh] flex flex-col rounded-3xl bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
+      {/* Card — bottom sheet on mobile, centered modal on desktop */}
+      <div className="relative w-full sm:max-w-xl max-h-[92vh] sm:max-h-[90vh] flex flex-col sm:rounded-3xl rounded-t-3xl bg-white dark:bg-slate-900 shadow-2xl overflow-hidden">
 
         {/* Illustrated hero */}
         {mode === 'illustrated' && (
-          <div className={`relative h-56 bg-gradient-to-br ${gradient} flex-shrink-0`}>
+          <div className={`relative h-48 sm:h-56 bg-gradient-to-br ${gradient} flex-shrink-0`}>
             {showImage && (
               <img
                 src={imageUrl!}
@@ -120,7 +125,7 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
 
             {/* Header row inside image */}
             <div className="absolute top-0 inset-x-0 flex items-center justify-between px-5 pt-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <div className="w-7 h-7 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -128,10 +133,18 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
                 </div>
                 <span className="text-white font-semibold text-sm drop-shadow">{s.aiSummaryResultLabel ?? 'Summary'}</span>
                 <span className="text-white/60 text-xs drop-shadow">{wordCount} words</span>
+                {isAI && (
+                  <span className="flex items-center gap-1 bg-emerald-500/80 backdrop-blur-sm text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    AI
+                  </span>
+                )}
               </div>
               <button
                 onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 transition-colors flex-shrink-0"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -160,7 +173,17 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
                 </svg>
               </div>
               <div>
-                <h2 className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.aiSummaryResultLabel ?? 'Summary'}</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="font-semibold text-slate-800 dark:text-slate-100 text-sm">{s.aiSummaryResultLabel ?? 'Summary'}</h2>
+                  {isAI && (
+                    <span className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-semibold px-2 py-0.5 rounded-full">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                      AI
+                    </span>
+                  )}
+                </div>
                 <p className="text-xs text-slate-400">{wordCount} words · tap any word for definition</p>
               </div>
             </div>
@@ -177,8 +200,8 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
 
         {/* Mode toggle + hint */}
         <div className="flex items-center justify-between px-5 py-2 border-b border-slate-100 dark:border-slate-800 flex-shrink-0 bg-slate-50/80 dark:bg-slate-800/80">
-          <p className="text-xs text-slate-400 italic">Tap any word for definition</p>
-          <div className="flex gap-1">
+          <p className="text-xs text-slate-400 italic hidden sm:block">Tap any word for definition</p>
+          <div className="flex gap-1 w-full sm:w-auto justify-center sm:justify-end">
             {([
               ['illustrated', '🖼', s.aiSummaryIllustrated ?? 'Illustrated'],
               ['plain',       '≡',  s.aiSummaryPlain       ?? 'Plain'],
@@ -186,7 +209,7 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
               <button
                 key={m}
                 onClick={() => setMode(m as 'illustrated' | 'plain')}
-                className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                   mode === m
                     ? 'bg-violet-500 text-white shadow-sm'
                     : 'text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -201,20 +224,20 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto">
           {mode === 'illustrated' ? (
-            <div className="px-6 py-6">
-              <p className="text-xs text-slate-400 italic mb-4 text-center">Tap any word for its definition</p>
+            <div className="px-5 sm:px-6 py-5 sm:py-6">
+              <p className="text-xs text-slate-400 italic mb-4 text-center sm:block hidden">Tap any word for its definition</p>
               <div className="flex gap-3 items-start">
-                <span className="text-violet-400 dark:text-violet-500 text-6xl leading-none font-serif flex-shrink-0 -mt-2 select-none">"</span>
-                <p className="text-slate-800 dark:text-slate-100 text-xl leading-relaxed font-medium">
+                <span className="text-violet-400 dark:text-violet-500 text-5xl sm:text-6xl leading-none font-serif flex-shrink-0 -mt-2 select-none">"</span>
+                <p className="text-slate-800 dark:text-slate-100 text-lg sm:text-xl leading-relaxed font-medium">
                   <ClickableText text={summary} />
                 </p>
               </div>
               <div className="flex justify-end mt-1">
-                <span className="text-violet-400 dark:text-violet-500 text-6xl leading-none font-serif select-none">"</span>
+                <span className="text-violet-400 dark:text-violet-500 text-5xl sm:text-6xl leading-none font-serif select-none">"</span>
               </div>
             </div>
           ) : (
-            <div className="px-6 py-8">
+            <div className="px-5 sm:px-6 py-6 sm:py-8">
               <p className="text-slate-700 dark:text-slate-200 text-base leading-loose">
                 <ClickableText text={summary} />
               </p>
@@ -225,12 +248,14 @@ export function SummaryModal({ summary, keywords, onClose }: SummaryModalProps) 
         {/* Footer */}
         <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 flex-shrink-0 bg-gradient-to-r from-violet-50/60 to-purple-50/60 dark:from-violet-950/30 dark:to-purple-950/30">
           <p className="text-xs text-slate-400 text-center">
-            {s.aiSummaryNote ?? 'Extracts the key sentences — works best on articles & passages'}
+            {isAI
+              ? 'Summarised by Google Gemini AI — genuinely synthesised, not extracted'
+              : (s.aiSummaryNote ?? 'Extracts the key sentences — add a Gemini API key for real AI summaries')}
           </p>
         </div>
       </div>
 
-      {/* Word definition popup — rendered outside modal card so it can overflow */}
+      {/* Word definition popup */}
       {popup && (
         <WordDefinitionPopup
           word={popup.word}

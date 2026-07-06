@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { playSound, SoundId, SoundHandle } from '../utils/soundEngine'
 
 export function useAmbientSound() {
@@ -19,11 +19,24 @@ export function useAmbientSound() {
     }
   }
 
-  async function play(id: SoundId) {
+  // Ensure a running AudioContext — call synchronously in user gesture
+  function ensureContext(): AudioContext {
+    if (!ctxRef.current || ctxRef.current.state === 'closed') {
+      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+      const ctx = new AudioCtx()
+      const gain = ctx.createGain()
+      gain.gain.value = volumeRef.current
+      gain.connect(ctx.destination)
+      ctxRef.current = ctx
+      masterRef.current = gain
+    }
+    return ctxRef.current
+  }
+
+  const play = useCallback((id: SoundId) => {
     setError(null)
     stopCurrent()
 
-    // Toggle off if same sound clicked again
     if (activeIdRef.current === id) {
       activeIdRef.current = null
       setActiveSoundId(null)
@@ -31,40 +44,46 @@ export function useAmbientSound() {
     }
 
     try {
-      // Always create a fresh AudioContext if none exists or it's closed
-      if (!ctxRef.current || ctxRef.current.state === 'closed') {
-        const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
-        const gain = ctx.createGain()
-        gain.gain.value = volumeRef.current
-        gain.connect(ctx.destination)
-        ctxRef.current = ctx
-        masterRef.current = gain
-      }
-
-      const ctx = ctxRef.current
+      // Create / reuse context synchronously (must stay in user gesture callstack)
+      const ctx = ensureContext()
       const master = masterRef.current!
 
-      // Resume suspended context — must happen in user gesture callstack
+      // Resume if suspended — fire and don't await so we stay in the gesture context
+      const startPlayback = () => {
+        if (ctx.state !== 'running') {
+          setError('Audio blocked by browser — tap again to unlock.')
+          activeIdRef.current = null
+          setActiveSoundId(null)
+          return
+        }
+        try {
+          handleRef.current = playSound(ctx, id, master)
+          activeIdRef.current = id
+          setActiveSoundId(id)
+        } catch (err) {
+          console.error('[Ambient] playSound error:', err)
+          setError('Could not start sound. Please try again.')
+          activeIdRef.current = null
+          setActiveSoundId(null)
+        }
+      }
+
       if (ctx.state === 'suspended') {
-        await ctx.resume()
+        ctx.resume().then(startPlayback).catch(() => {
+          setError('Audio blocked by browser — tap again to unlock.')
+          activeIdRef.current = null
+          setActiveSoundId(null)
+        })
+      } else {
+        startPlayback()
       }
-
-      // Verify it actually started
-      if (ctx.state !== 'running') {
-        setError('Audio blocked by browser. Click anywhere and try again.')
-        return
-      }
-
-      handleRef.current = playSound(ctx, id, master)
-      activeIdRef.current = id
-      setActiveSoundId(id)
     } catch (err) {
       console.error('[Ambient] play error:', err)
-      setError('Could not start audio. Try clicking again.')
+      setError('Could not start audio. Try tapping again.')
       activeIdRef.current = null
       setActiveSoundId(null)
     }
-  }
+  }, [])
 
   function stop() {
     stopCurrent()

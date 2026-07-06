@@ -31,6 +31,7 @@ interface ControlsSidebarProps {
   onPlaySound: (id: SoundId) => void
   onStopSound: () => void
   onSoundVolume: (v: number) => void
+  soundError?: string | null
   onPause: () => void
   onResume: () => void
   onStop: () => void
@@ -99,6 +100,7 @@ export function ControlsSidebar({
   onPlaySound,
   onStopSound,
   onSoundVolume,
+  soundError,
   boldModeEnabled,
   onBoldModeToggle,
   followTTS,
@@ -113,8 +115,10 @@ export function ControlsSidebar({
   const { t } = useLanguage()
   const s = t.sidebar
   const [copied, setCopied] = useState(false)
-  const { summary, keywords, loading, error, length, setLength, summarize, clear } = useAISummary()
+  const { summary, keywords, loading, error, length, setLength, summarize, clear, isAI, apiKey, saveApiKey } = useAISummary()
   const [showSummaryModal, setShowSummaryModal] = useState(false)
+  const [showKeyInput, setShowKeyInput] = useState(false)
+  const [keyDraft, setKeyDraft] = useState('')
 
   function handleShare() {
     if (!displayText) return
@@ -130,11 +134,11 @@ export function ControlsSidebar({
 
   return (
     <>
-      {/* Toggle button */}
+      {/* Toggle button — desktop tab on the side; on mobile only show when closed */}
       <button
         onClick={() => onToggleOpen(!isOpen)}
         className={`fixed top-20 z-50 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 shadow-md rounded-l-xl p-2.5 transition-all duration-300 hover:bg-sky-50 dark:hover:bg-slate-700 ${
-          isOpen ? 'right-80' : 'right-0'
+          isOpen ? 'sm:right-80 right-0 hidden sm:flex' : 'right-0 flex'
         }`}
         aria-label={isOpen ? 'Close settings' : 'Open settings'}
       >
@@ -150,9 +154,17 @@ export function ControlsSidebar({
         </svg>
       </button>
 
+      {/* Backdrop on mobile (tap outside to close) */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-30 sm:hidden"
+          onClick={() => onToggleOpen(false)}
+        />
+      )}
+
       {/* Sidebar panel */}
       <aside
-        className={`fixed top-16 right-0 bottom-0 w-80 bg-white dark:bg-slate-800 border-l border-slate-100 dark:border-slate-700 shadow-xl z-40 flex flex-col transition-transform duration-300 ${
+        className={`fixed top-16 right-0 bottom-0 w-full sm:w-80 bg-white dark:bg-slate-800 border-l border-slate-100 dark:border-slate-700 shadow-xl z-40 flex flex-col transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -173,9 +185,19 @@ export function ControlsSidebar({
                 🔥 {streak} {s.streakLabel ?? 'day streak'}
               </span>
             )}
-            <Button variant="ghost" size="sm" onClick={onResetSettings} className="text-xs text-slate-400">
+            <Button variant="ghost" size="sm" onClick={onResetSettings} className="text-xs text-slate-400 hidden sm:inline-flex">
               {s.resetBtn}
             </Button>
+            {/* Mobile close button */}
+            <button
+              onClick={() => onToggleOpen(false)}
+              className="sm:hidden flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+              aria-label="Close settings"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -313,7 +335,7 @@ export function ControlsSidebar({
 
             {/* Summarise button */}
             <button
-              onClick={() => { if (summarize(displayText)) setShowSummaryModal(true) }}
+              onClick={async () => { if (await summarize(displayText)) setShowSummaryModal(true) }}
               disabled={loading || !hasText}
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white text-sm font-semibold shadow-sm hover:from-violet-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
@@ -341,10 +363,79 @@ export function ControlsSidebar({
               )}
             </button>
 
+            {/* Gemini API key UI */}
+            {apiKey ? (
+              <div className="rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 px-3 py-2 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-emerald-500 flex-shrink-0">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">OpenRouter AI connected</span>
+                </div>
+                <button
+                  onClick={() => { setKeyDraft(apiKey); setShowKeyInput(v => !v) }}
+                  className="text-xs text-emerald-600 dark:text-emerald-400 underline hover:no-underline"
+                >
+                  Change
+                </button>
+              </div>
+            ) : (
+              <div className="rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 px-3 py-2.5 space-y-1.5">
+                <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">Connect AI for real summaries</p>
+                <p className="text-xs text-amber-600 dark:text-amber-500 leading-relaxed">
+                  Get a free key at <span className="font-mono font-semibold">openrouter.ai</span> → "Get API key" (free tier available)
+                </p>
+                <button
+                  onClick={() => { setKeyDraft(''); setShowKeyInput(v => !v) }}
+                  className="w-full text-xs font-semibold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/40 hover:bg-amber-200 dark:hover:bg-amber-900/60 rounded-lg py-1.5 transition-colors"
+                >
+                  {showKeyInput ? 'Cancel' : '+ Add API Key'}
+                </button>
+              </div>
+            )}
+
+            {/* Key input field */}
+            {showKeyInput && (
+              <div className="space-y-1.5">
+                <input
+                  type="password"
+                  value={keyDraft}
+                  onChange={e => setKeyDraft(e.target.value)}
+                  placeholder="sk-or-..."
+                  className="w-full text-xs bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-sky-400 font-mono"
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && keyDraft.trim()) {
+                      saveApiKey(keyDraft)
+                      setShowKeyInput(false)
+                    }
+                  }}
+                />
+                <div className="flex gap-1.5">
+                  <button
+                    onClick={() => { saveApiKey(''); setShowKeyInput(false); setKeyDraft('') }}
+                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold text-red-500 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors"
+                  >
+                    Remove
+                  </button>
+                  <button
+                    onClick={() => { if (keyDraft.trim()) { saveApiKey(keyDraft); setShowKeyInput(false) } }}
+                    disabled={!keyDraft.trim()}
+                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-50 transition-colors"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Error */}
             {error && (
               <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3 py-2.5 text-xs text-red-600 dark:text-red-400">
-                {error === 'too_short' ? (s.aiSummaryTooShort ?? 'Text is too short to summarise — load a longer passage first.') : error}
+                {error === 'too_short'      ? (s.aiSummaryTooShort ?? 'Text is too short to summarise — load a longer passage first.')
+                : error === 'invalid_key'   ? 'Invalid Gemini API key. Check your key and try again.'
+                : error === 'rate_limit'    ? 'Gemini rate limit reached. Wait a moment and try again.'
+                : error === 'empty_response'? 'Received an empty response from Gemini. Try again.'
+                : 'Gemini API error. Check your connection and try again.'}
               </div>
             )}
 
@@ -371,7 +462,9 @@ export function ControlsSidebar({
             )}
 
             <p className="text-xs text-slate-400 text-center leading-relaxed">
-              {s.aiSummaryNote ?? 'Extracts the key sentences — works best on articles & passages'}
+              {apiKey
+                ? 'Real AI summary via OpenRouter (free)'
+                : (s.aiSummaryNote ?? 'Add an OpenRouter key for real AI summaries, or get an extractive preview now')}
             </p>
           </Section>
 
@@ -499,6 +592,7 @@ export function ControlsSidebar({
               onPlay={onPlaySound}
               onStop={onStopSound}
               onVolumeChange={onSoundVolume}
+              error={soundError}
             />
           </Section>
 
@@ -559,6 +653,7 @@ export function ControlsSidebar({
         <SummaryModal
           summary={summary}
           keywords={keywords}
+          isAI={isAI}
           onClose={() => setShowSummaryModal(false)}
         />
       )}

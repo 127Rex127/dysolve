@@ -185,7 +185,7 @@ export function HeroSection({ onGetStarted, onScreening, onTests }: HeroSectionP
           <p className="text-lg sm:text-xl font-semibold tracking-wide uppercase text-sky-500">
             {h.tagline ?? 'Solve your reading challenges'}
           </p>
-          <h1 className="text-5xl sm:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white leading-tight">
             {h.h1a}{' '}
             <span className="bg-gradient-to-r from-sky-500 to-blue-600 bg-clip-text text-transparent">
               {h.h1b}
