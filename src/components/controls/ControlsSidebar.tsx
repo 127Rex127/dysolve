@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { ReaderSettings, FocusWindowState, TTSState, FontFamily } from '../../types'
 import { SoundId } from '../../utils/soundEngine'
 import { Slider } from '../ui/Slider'
@@ -115,11 +115,6 @@ export function ControlsSidebar({
   const [copied, setCopied] = useState(false)
   const { summary, keywords, loading, error, length, setLength, summarize, clear } = useAISummary()
   const [showSummaryModal, setShowSummaryModal] = useState(false)
-
-  // Auto-open modal when a fresh summary is generated
-  useEffect(() => {
-    if (summary) setShowSummaryModal(true)
-  }, [summary])
 
   function handleShare() {
     if (!displayText) return
@@ -278,6 +273,20 @@ export function ControlsSidebar({
             }
             defaultOpen={true}
           >
+            {/* Decorative banner */}
+            <div className="rounded-xl bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 p-px">
+              <div className="rounded-[11px] bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/60 dark:to-purple-950/60 px-3 py-2.5 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-violet-700 dark:text-violet-300">{s.aiSummarySection ?? 'AI Summary'}</p>
+                  <p className="text-xs text-violet-500 dark:text-violet-400 leading-tight">Instantly extract key ideas</p>
+                </div>
+              </div>
+            </div>
             {/* Length selector */}
             <div className="space-y-1.5">
               <p className="text-xs text-slate-400 font-medium">{s.aiSummaryLengthLabel ?? 'Summary length'}</p>
@@ -304,7 +313,7 @@ export function ControlsSidebar({
 
             {/* Summarise button */}
             <button
-              onClick={() => summarize(displayText)}
+              onClick={() => { if (summarize(displayText)) setShowSummaryModal(true) }}
               disabled={loading || !hasText}
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white text-sm font-semibold shadow-sm hover:from-violet-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >

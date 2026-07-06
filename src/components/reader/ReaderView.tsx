@@ -11,6 +11,7 @@ interface ReaderViewProps {
   boldedWords: Map<number, string>
   onToggleBold: (index: number, word: string) => void
   boldModeEnabled?: boolean
+  onTextChange?: (text: string) => void
 }
 
 interface PopupTarget {
@@ -54,11 +55,28 @@ function extractParagraph(text: string, charPos: number): string {
   return result || extractSentence(text, charPos)
 }
 
-export function ReaderView({ text, settings, ttsState, boldedWords, onToggleBold, boldModeEnabled }: ReaderViewProps) {
+export function ReaderView({ text, settings, ttsState, boldedWords, onToggleBold, boldModeEnabled, onTextChange }: ReaderViewProps) {
   const bionicMode = settings.bionicMode
   const { t } = useLanguage()
   const [popup, setPopup] = useState<PopupTarget | null>(null)
+  const [editMode, setEditMode] = useState(false)
+  const [editText, setEditText] = useState(text)
   const articleRef = useRef<HTMLElement>(null)
+
+  function handleEnterEdit() {
+    setEditText(text)
+    setEditMode(true)
+    setPopup(null)
+  }
+
+  function handleSaveEdit() {
+    onTextChange?.(editText)
+    setEditMode(false)
+  }
+
+  function handleCancelEdit() {
+    setEditMode(false)
+  }
 
   const readerStyle: React.CSSProperties = {
     fontSize: `${settings.fontSize}px`,
@@ -160,25 +178,79 @@ export function ReaderView({ text, settings, ttsState, boldedWords, onToggleBold
   }
 
   return (
-    <div className="flex-1 min-h-screen transition-colors duration-300" style={{ backgroundColor: settings.backgroundColor }}>
-      <div className="pt-24 pb-24 px-6">
-        <article
-          ref={articleRef}
-          className="reader-article mx-auto text-slate-800 whitespace-pre-wrap select-text"
-          style={readerStyle}
-          onMouseUp={handleMouseUp}
-        >
-          <WordHighlighter
-            text={text}
-            currentWordIndex={ttsState.currentWordIndex}
-            boldedWordIndices={boldedWords}
-            onWordClick={handleWordClick}
-            bionicMode={bionicMode}
-          />
-        </article>
-      </div>
+    <div className="flex-1 min-h-screen transition-colors duration-300 relative" style={{ backgroundColor: settings.backgroundColor }}>
 
-      {popup && (
+      {/* Edit mode */}
+      {editMode ? (
+        <div className="pt-20 pb-24 px-6">
+          {/* Edit toolbar */}
+          <div className="sticky top-16 z-20 mb-4 flex items-center justify-between gap-3 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-2xl px-4 py-2.5 shadow-sm" style={{ maxWidth: `${settings.maxWidth}px`, margin: '0 auto 16px' }}>
+            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              <span className="text-sm font-semibold">Editing</span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={handleCancelEdit}
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveEdit}
+                className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors shadow-sm"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+          <textarea
+            autoFocus
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            className="mx-auto block w-full rounded-2xl border-2 border-amber-300 dark:border-amber-700 bg-white/90 dark:bg-slate-800/90 text-slate-800 dark:text-slate-100 focus:outline-none focus:border-amber-400 resize-none p-6 shadow-inner transition-colors"
+            style={{ ...readerStyle, maxWidth: `${settings.maxWidth}px`, minHeight: '60vh' }}
+          />
+        </div>
+      ) : (
+        <>
+          <div className="pt-24 pb-24 px-6">
+            <article
+              ref={articleRef}
+              className="reader-article mx-auto text-slate-800 whitespace-pre-wrap select-text"
+              style={readerStyle}
+              onMouseUp={handleMouseUp}
+            >
+              <WordHighlighter
+                text={text}
+                currentWordIndex={ttsState.currentWordIndex}
+                boldedWordIndices={boldedWords}
+                onWordClick={handleWordClick}
+                bionicMode={bionicMode}
+              />
+            </article>
+          </div>
+
+          {/* Floating edit button */}
+          {onTextChange && (
+            <button
+              onClick={handleEnterEdit}
+              title="Edit text"
+              className="fixed bottom-6 right-6 z-40 w-11 h-11 flex items-center justify-center rounded-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-lg text-slate-400 hover:text-amber-500 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-amber-100 dark:hover:shadow-amber-900/30 transition-all hover:scale-110 active:scale-95"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+          )}
+        </>
+      )}
+
+      {!editMode && popup && (
         <WordDefinitionPopup
           word={popup.word}
           sentence={popup.sentence}

@@ -241,6 +241,7 @@ function AppInner() {
             boldedWords={boldedWords}
             onToggleBold={handleToggleBold}
             boldModeEnabled={boldModeEnabled}
+            onTextChange={setDisplayText}
           />
         </div>
       )}

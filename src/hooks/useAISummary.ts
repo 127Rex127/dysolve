@@ -88,7 +88,7 @@ export function useAISummary() {
   const [error,    setError]    = useState<string | null>(null)
   const [length,   setLength]   = useState<SummaryLength>('standard')
 
-  const summarize = useCallback((text: string) => {
+  const summarize = useCallback((text: string): boolean => {
     setError(null)
     setSummary(null)
     setKeywords([])
@@ -96,12 +96,13 @@ export function useAISummary() {
     const wordCount = text.trim().split(/\s+/).length
     if (wordCount < 40) {
       setError('too_short')
-      return
+      return false
     }
 
     const result = extractiveSummarize(text, SENTENCE_COUNT[length])
     setSummary(result)
     setKeywords(extractKeywords(text))
+    return true
   }, [length])
 
   const clear = useCallback(() => {
