@@ -167,6 +167,7 @@ export const id: Translations = {
     aiSummaryResultLabel: 'Ringkasan', aiSummaryClear: 'Hapus ringkasan',
     aiSummaryNote: 'Mengekstrak kalimat utama — paling cocok untuk artikel dan paragraf',
     aiSummaryTooShort: 'Teks terlalu pendek untuk diringkas — muat teks yang lebih panjang terlebih dahulu.',
+    aiSummaryIllustrated: 'Bergambar', aiSummaryPlain: 'Teks biasa', aiSummaryViewBtn: 'Lihat Ringkasan',
     noTextYet: 'Teks Anda akan muncul di sini', wordsLabel: 'kata', minLabel: 'mnt',
     flashcardBtn: 'Buat kartu flash', flashcardTitle: 'Ulasan kartu flash', flashcardBolded: 'kata dicetak tebal',
     flashcardTranslateTo: 'Terjemahkan ke', flashcardLearned: 'dipelajari', flashcardAllDone: 'Selesai!',

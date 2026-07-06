@@ -167,6 +167,7 @@ export const pl: Translations = {
     aiSummaryResultLabel: 'Streszczenie', aiSummaryClear: 'Wyczyść streszczenie',
     aiSummaryNote: 'Wyodrębnia kluczowe zdania — najlepiej działa na artykułach i fragmentach',
     aiSummaryTooShort: 'Tekst jest za krótki do streszczenia — wczytaj dłuższy fragment.',
+    aiSummaryIllustrated: 'Z ilustracjami', aiSummaryPlain: 'Zwykły tekst', aiSummaryViewBtn: 'Zobacz podsumowanie',
     noTextYet: 'Twój tekst pojawi się tutaj', wordsLabel: 'słów', minLabel: 'min',
     flashcardBtn: 'Utwórz fiszki', flashcardTitle: 'Powtórka z fiszkami', flashcardBolded: 'pogrubione słowa',
     flashcardTranslateTo: 'Przetłumacz na', flashcardLearned: 'nauczone', flashcardAllDone: 'Gotowe!',

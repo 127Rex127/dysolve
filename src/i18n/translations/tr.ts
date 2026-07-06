@@ -167,6 +167,7 @@ export const tr: Translations = {
     aiSummaryResultLabel: 'Özet', aiSummaryClear: 'Özeti temizle',
     aiSummaryNote: 'Anahtar cümleleri çıkarır — makaleler ve metinler için en iyi şekilde çalışır',
     aiSummaryTooShort: 'Metin özetlemek için çok kısa — daha uzun bir metin yükleyin.',
+    aiSummaryIllustrated: 'Resimli', aiSummaryPlain: 'Düz metin', aiSummaryViewBtn: 'Özeti Gör',
     noTextYet: 'Metniniz burada görünecek', wordsLabel: 'kelime', minLabel: 'dk',
     flashcardBtn: 'Bilgi kartı oluştur', flashcardTitle: 'Bilgi kartı tekrarı', flashcardBolded: 'kalın kelimeler',
     flashcardTranslateTo: 'Çevir', flashcardLearned: 'öğrenildi', flashcardAllDone: 'Tamamlandı!',

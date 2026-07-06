@@ -130,6 +130,7 @@ export const it: Translations = {
     aiSummaryResultLabel: 'Riepilogo', aiSummaryClear: 'Cancella riepilogo',
     aiSummaryNote: 'Estrae le frasi chiave — funziona meglio su articoli e brani',
     aiSummaryTooShort: 'Il testo è troppo breve per essere riepilogato — carica prima un brano più lungo.',
+    aiSummaryIllustrated: 'Illustrato', aiSummaryPlain: 'Testo normale', aiSummaryViewBtn: 'Visualizza riepilogo',
     noTextYet: 'Il tuo testo apparirà qui', wordsLabel: 'parole', minLabel: 'min',
     flashcardBtn: 'Crea flashcard', flashcardTitle: 'Ripasso con flashcard', flashcardBolded: 'parole in grassetto',
     flashcardTranslateTo: 'Traduci in', flashcardLearned: 'apprese', flashcardAllDone: 'Fatto!',

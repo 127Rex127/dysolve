@@ -118,6 +118,7 @@ export const zhTW: Translations = {
     aiSummaryResultLabel: '摘要', aiSummaryClear: '清除摘要',
     aiSummaryNote: '提取關鍵句子——最適合文章與段落',
     aiSummaryTooShort: '文本太短，無法生成摘要——請先載入更長的段落。',
+    aiSummaryIllustrated: '插圖版', aiSummaryPlain: '純文字', aiSummaryViewBtn: '查看摘要',
     noTextYet: '您的文字將顯示在這裡', wordsLabel: '字', minLabel: '分鐘',
     flashcardBtn: '建立閃卡', flashcardTitle: '閃卡複習', flashcardBolded: '個粗體單字',
     flashcardTranslateTo: '翻譯為', flashcardLearned: '已掌握', flashcardAllDone: '全部完成！',

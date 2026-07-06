@@ -130,6 +130,7 @@ export const ja: Translations = {
     aiSummaryResultLabel: '要約', aiSummaryClear: '要約をクリア',
     aiSummaryNote: '重要な文を抽出します——記事や文章に最適',
     aiSummaryTooShort: 'テキストが短すぎて要約できません——より長い文章を読み込んでください。',
+    aiSummaryIllustrated: 'イラスト付き', aiSummaryPlain: 'プレーンテキスト', aiSummaryViewBtn: '要約を見る',
     noTextYet: 'テキストはここに表示されます', wordsLabel: '語', minLabel: '分',
     flashcardBtn: 'フラッシュカード作成', flashcardTitle: 'フラッシュカード復習', flashcardBolded: '太字の単語',
     flashcardTranslateTo: '翻訳先', flashcardLearned: '習得済み', flashcardAllDone: '完了！',

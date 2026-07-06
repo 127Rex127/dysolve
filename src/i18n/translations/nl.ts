@@ -167,6 +167,7 @@ export const nl: Translations = {
     aiSummaryResultLabel: 'Samenvatting', aiSummaryClear: 'Samenvatting wissen',
     aiSummaryNote: "Extraheert de belangrijkste zinnen — werkt het beste bij artikelen en passages",
     aiSummaryTooShort: 'Tekst is te kort om samen te vatten — laad eerst een langere passage.',
+    aiSummaryIllustrated: 'Geïllustreerd', aiSummaryPlain: 'Platte tekst', aiSummaryViewBtn: 'Samenvatting bekijken',
     noTextYet: 'Uw tekst verschijnt hier', wordsLabel: 'woorden', minLabel: 'min',
     flashcardBtn: 'Flashcards maken', flashcardTitle: 'Flashcard oefening', flashcardBolded: 'vetgedrukte woorden',
     flashcardTranslateTo: 'Vertalen naar', flashcardLearned: 'geleerd', flashcardAllDone: 'Klaar!',

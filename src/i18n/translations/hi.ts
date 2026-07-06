@@ -167,6 +167,7 @@ export const hi: Translations = {
     aiSummaryResultLabel: 'सारांश', aiSummaryClear: 'सारांश हटाएं',
     aiSummaryNote: 'मुख्य वाक्य निकालता है — लेखों और अनुच्छेदों पर सबसे अच्छा काम करता है',
     aiSummaryTooShort: 'टेक्स्ट सारांश के लिए बहुत छोटा है — पहले एक लंबा अनुच्छेद लोड करें।',
+    aiSummaryIllustrated: 'सचित्र', aiSummaryPlain: 'सादा पाठ', aiSummaryViewBtn: 'सारांश देखें',
     noTextYet: 'आपका टेक्स्ट यहाँ दिखाई देगा', wordsLabel: 'शब्द', minLabel: 'मिनट',
     flashcardBtn: 'फ्लैशकार्ड बनाएं', flashcardTitle: 'फ्लैशकार्ड अभ्यास', flashcardBolded: 'बोल्ड शब्द',
     flashcardTranslateTo: 'अनुवाद करें', flashcardLearned: 'सीखे', flashcardAllDone: 'हो गया!',

@@ -188,6 +188,9 @@ export interface Translations {
     aiSummaryClear?: string       // "Clear summary"
     aiSummaryNote?: string        // footer note
     aiSummaryTooShort?: string    // error: text too short
+    aiSummaryIllustrated?: string // "Illustrated"
+    aiSummaryPlain?: string       // "Plain text"
+    aiSummaryViewBtn?: string     // "View Summary"
     noTextYet?: string         // "Your text will appear here"
     wordsLabel?: string        // "words"
     minLabel?: string          // "min"

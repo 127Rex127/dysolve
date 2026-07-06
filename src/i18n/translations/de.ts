@@ -130,6 +130,7 @@ export const de: Translations = {
     aiSummaryResultLabel: 'Zusammenfassung', aiSummaryClear: 'Zusammenfassung löschen',
     aiSummaryNote: 'Extrahiert die wichtigsten Sätze — funktioniert am besten bei Artikeln und Texten',
     aiSummaryTooShort: 'Text ist zu kurz zum Zusammenfassen — laden Sie zuerst einen längeren Text.',
+    aiSummaryIllustrated: 'Illustriert', aiSummaryPlain: 'Klartext', aiSummaryViewBtn: 'Zusammenfassung anzeigen',
     noTextYet: 'Ihr Text erscheint hier', wordsLabel: 'Wörter', minLabel: 'Min',
     flashcardBtn: 'Karteikarten erstellen', flashcardTitle: 'Karteikarten-Übung', flashcardBolded: 'markierte Wörter',
     flashcardTranslateTo: 'Übersetzen in', flashcardLearned: 'gelernt', flashcardAllDone: 'Fertig!',

@@ -130,6 +130,7 @@ export const fr: Translations = {
     aiSummaryResultLabel: 'Résumé', aiSummaryClear: 'Effacer le résumé',
     aiSummaryNote: 'Extrait les phrases clés — fonctionne mieux sur les articles et passages',
     aiSummaryTooShort: 'Le texte est trop court pour être résumé — chargez d\'abord un passage plus long.',
+    aiSummaryIllustrated: 'Illustré', aiSummaryPlain: 'Texte brut', aiSummaryViewBtn: 'Voir le résumé',
     noTextYet: 'Votre texte apparaîtra ici', wordsLabel: 'mots', minLabel: 'min',
     flashcardBtn: 'Créer des fiches', flashcardTitle: 'Révision par fiches', flashcardBolded: 'mots en gras',
     flashcardTranslateTo: 'Traduire en', flashcardLearned: 'appris', flashcardAllDone: 'Terminé !',

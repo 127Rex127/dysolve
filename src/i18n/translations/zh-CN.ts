@@ -131,6 +131,7 @@ export const zhCN: Translations = {
     aiSummaryResultLabel: '摘要', aiSummaryClear: '清除摘要',
     aiSummaryNote: '提取关键句子——最适合文章与段落',
     aiSummaryTooShort: '文本太短，无法生成摘要——请先加载更长的段落。',
+    aiSummaryIllustrated: '插图版', aiSummaryPlain: '纯文本', aiSummaryViewBtn: '查看摘要',
     noTextYet: '您的文字将显示在这里', wordsLabel: '字', minLabel: '分钟',
     flashcardBtn: '创建闪卡', flashcardTitle: '闪卡复习', flashcardBolded: '个粗体单词',
     flashcardTranslateTo: '翻译为', flashcardLearned: '已掌握', flashcardAllDone: '全部完成！',

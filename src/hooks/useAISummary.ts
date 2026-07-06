@@ -73,14 +73,25 @@ function extractiveSummarize(text: string, numSentences: number): string {
   return top.map(x => x.s).join(' ')
 }
 
+function extractKeywords(text: string, n = 5): string[] {
+  const freq: Record<string, number> = {}
+  tokenize(text).forEach(w => { freq[w] = (freq[w] ?? 0) + 1 })
+  return Object.entries(freq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([w]) => w)
+}
+
 export function useAISummary() {
-  const [summary, setSummary] = useState<string | null>(null)
-  const [error, setError]   = useState<string | null>(null)
-  const [length, setLength] = useState<SummaryLength>('standard')
+  const [summary,  setSummary]  = useState<string | null>(null)
+  const [keywords, setKeywords] = useState<string[]>([])
+  const [error,    setError]    = useState<string | null>(null)
+  const [length,   setLength]   = useState<SummaryLength>('standard')
 
   const summarize = useCallback((text: string) => {
     setError(null)
     setSummary(null)
+    setKeywords([])
 
     const wordCount = text.trim().split(/\s+/).length
     if (wordCount < 40) {
@@ -90,12 +101,14 @@ export function useAISummary() {
 
     const result = extractiveSummarize(text, SENTENCE_COUNT[length])
     setSummary(result)
+    setKeywords(extractKeywords(text))
   }, [length])
 
   const clear = useCallback(() => {
     setSummary(null)
+    setKeywords([])
     setError(null)
   }, [])
 
-  return { summary, loading: false, error, length, setLength, summarize, clear }
+  return { summary, keywords, loading: false, error, length, setLength, summarize, clear }
 }

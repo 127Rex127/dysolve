@@ -130,6 +130,7 @@ export const ko: Translations = {
     aiSummaryResultLabel: '요약', aiSummaryClear: '요약 지우기',
     aiSummaryNote: '핵심 문장을 추출합니다 — 기사 및 지문에 가장 적합',
     aiSummaryTooShort: '텍스트가 너무 짧아 요약할 수 없습니다 — 더 긴 내용을 먼저 불러오세요.',
+    aiSummaryIllustrated: '삽화 포함', aiSummaryPlain: '일반 텍스트', aiSummaryViewBtn: '요약 보기',
     noTextYet: '텍스트가 여기에 표시됩니다', wordsLabel: '단어', minLabel: '분',
     flashcardBtn: '플래시카드 만들기', flashcardTitle: '플래시카드 복습', flashcardBolded: '굵은 단어',
     flashcardTranslateTo: '번역 언어', flashcardLearned: '학습 완료', flashcardAllDone: '완료!',

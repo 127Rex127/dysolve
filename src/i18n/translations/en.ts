@@ -171,6 +171,8 @@ export const en: Translations = {
     aiSummaryResultLabel: 'Summary', aiSummaryClear: 'Clear summary',
     aiSummaryNote: 'Extracts the key sentences — works best on articles & passages',
     aiSummaryTooShort: 'Text is too short to summarise — load a longer passage first.',
+    aiSummaryIllustrated: 'Illustrated', aiSummaryPlain: 'Plain text',
+    aiSummaryViewBtn: 'View Summary',
     noTextYet: 'Your text will appear here',
     wordsLabel: 'words', minLabel: 'min',
     flashcardBtn: 'Create Flashcards',

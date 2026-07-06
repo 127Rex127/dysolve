@@ -167,6 +167,7 @@ export const uk: Translations = {
     aiSummaryResultLabel: 'Резюме', aiSummaryClear: 'Очистити',
     aiSummaryNote: 'Витягує ключові речення — найкраще працює зі статтями та уривками',
     aiSummaryTooShort: 'Текст занадто короткий — завантажте довший уривок.',
+    aiSummaryIllustrated: 'З ілюстраціями', aiSummaryPlain: 'Простий текст', aiSummaryViewBtn: 'Переглянути резюме',
     noTextYet: 'Ваш текст з\'явиться тут', wordsLabel: 'слів', minLabel: 'хв',
     flashcardBtn: 'Створити картки', flashcardTitle: 'Повторення карток', flashcardBolded: 'виділених слів',
     flashcardTranslateTo: 'Перекласти на', flashcardLearned: 'вивчено', flashcardAllDone: 'Готово!',

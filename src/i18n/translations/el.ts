@@ -167,6 +167,7 @@ export const el: Translations = {
     aiSummaryResultLabel: 'Περίληψη', aiSummaryClear: 'Εκκαθάριση περίληψης',
     aiSummaryNote: 'Εξάγει τις βασικές προτάσεις — λειτουργεί καλύτερα σε άρθρα και αποσπάσματα',
     aiSummaryTooShort: 'Το κείμενο είναι πολύ σύντομο για περίληψη — φορτώστε πρώτα ένα μεγαλύτερο απόσπασμα.',
+    aiSummaryIllustrated: 'Εικονογραφημένο', aiSummaryPlain: 'Απλό κείμενο', aiSummaryViewBtn: 'Προβολή περίληψης',
     noTextYet: 'Το κείμενό σας θα εμφανιστεί εδώ', wordsLabel: 'λέξεις', minLabel: 'λεπτ',
     flashcardBtn: 'Δημιουργία καρτελών', flashcardTitle: 'Επανάληψη καρτελών', flashcardBolded: 'έντονες λέξεις',
     flashcardTranslateTo: 'Μετάφραση σε', flashcardLearned: 'μαθεύτηκαν', flashcardAllDone: 'Τέλος!',

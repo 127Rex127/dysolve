@@ -130,6 +130,7 @@ export const ru: Translations = {
     aiSummaryResultLabel: 'Краткое изложение', aiSummaryClear: 'Очистить',
     aiSummaryNote: 'Извлекает ключевые предложения — лучше всего работает со статьями и отрывками',
     aiSummaryTooShort: 'Текст слишком короткий — загрузите более длинный отрывок.',
+    aiSummaryIllustrated: 'С иллюстрациями', aiSummaryPlain: 'Простой текст', aiSummaryViewBtn: 'Просмотреть резюме',
     noTextYet: 'Ваш текст появится здесь', wordsLabel: 'слов', minLabel: 'мин',
     flashcardBtn: 'Создать карточки', flashcardTitle: 'Повторение карточек', flashcardBolded: 'выделенных слов',
     flashcardTranslateTo: 'Перевести на', flashcardLearned: 'изучено', flashcardAllDone: 'Готово!',

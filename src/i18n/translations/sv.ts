@@ -167,6 +167,7 @@ export const sv: Translations = {
     aiSummaryResultLabel: 'Sammanfattning', aiSummaryClear: 'Rensa sammanfattning',
     aiSummaryNote: 'Extraherar nyckelmeningar – fungerar bäst på artiklar och textavsnitt',
     aiSummaryTooShort: 'Texten är för kort för att sammanfatta – läs in ett längre textavsnitt först.',
+    aiSummaryIllustrated: 'Illustrerad', aiSummaryPlain: 'Ren text', aiSummaryViewBtn: 'Visa sammanfattning',
     noTextYet: 'Din text visas här', wordsLabel: 'ord', minLabel: 'min',
     flashcardBtn: 'Skapa flashkort', flashcardTitle: 'Flashkortsövning', flashcardBolded: 'fetstilta ord',
     flashcardTranslateTo: 'Översätt till', flashcardLearned: 'lärda', flashcardAllDone: 'Klart!',

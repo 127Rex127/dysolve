@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ReaderSettings, FocusWindowState, TTSState, FontFamily } from '../../types'
 import { SoundId } from '../../utils/soundEngine'
 import { Slider } from '../ui/Slider'
@@ -10,6 +10,7 @@ import { TTSControl } from './TTSControl'
 import { SoundscapeControl } from './SoundscapeControl'
 import { useLanguage } from '../../i18n'
 import { useAISummary, type SummaryLength } from '../../hooks/useAISummary'
+import { SummaryModal } from '../reader/SummaryModal'
 
 interface ControlsSidebarProps {
   settings: ReaderSettings
@@ -112,7 +113,13 @@ export function ControlsSidebar({
   const { t } = useLanguage()
   const s = t.sidebar
   const [copied, setCopied] = useState(false)
-  const { summary, loading, error, length, setLength, summarize, clear } = useAISummary()
+  const { summary, keywords, loading, error, length, setLength, summarize, clear } = useAISummary()
+  const [showSummaryModal, setShowSummaryModal] = useState(false)
+
+  // Auto-open modal when a fresh summary is generated
+  useEffect(() => {
+    if (summary) setShowSummaryModal(true)
+  }, [summary])
 
   function handleShare() {
     if (!displayText) return
@@ -332,15 +339,21 @@ export function ControlsSidebar({
               </div>
             )}
 
-            {/* Summary result */}
+            {/* Summary ready — show view button */}
             {summary && (
               <div className="space-y-2">
-                <div className="rounded-xl bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-700 px-3 py-3">
-                  <p className="text-xs font-semibold text-violet-500 dark:text-violet-400 mb-1.5 uppercase tracking-wide">{s.aiSummaryResultLabel ?? 'Summary'}</p>
-                  <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">{summary}</p>
-                </div>
                 <button
-                  onClick={clear}
+                  onClick={() => setShowSummaryModal(true)}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-violet-300 dark:border-violet-700 text-violet-600 dark:text-violet-400 text-sm font-semibold hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-all"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  {s.aiSummaryViewBtn ?? 'View Summary'}
+                </button>
+                <button
+                  onClick={() => { clear(); }}
                   className="w-full text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors py-1"
                 >
                   {s.aiSummaryClear ?? 'Clear summary'}
@@ -533,6 +546,13 @@ export function ControlsSidebar({
           </div>
         </div>
       </aside>
+      {showSummaryModal && summary && (
+        <SummaryModal
+          summary={summary}
+          keywords={keywords}
+          onClose={() => setShowSummaryModal(false)}
+        />
+      )}
     </>
   )
 }
