@@ -9,6 +9,7 @@ import { BackgroundColorControl } from './BackgroundColorControl'
 import { TTSControl } from './TTSControl'
 import { SoundscapeControl } from './SoundscapeControl'
 import { useLanguage } from '../../i18n'
+import { useAISummary, type SummaryLength } from '../../hooks/useAISummary'
 
 interface ControlsSidebarProps {
   settings: ReaderSettings
@@ -111,6 +112,7 @@ export function ControlsSidebar({
   const { t } = useLanguage()
   const s = t.sidebar
   const [copied, setCopied] = useState(false)
+  const { summary, loading, error, length, setLength, summarize, clear } = useAISummary()
 
   function handleShare() {
     if (!displayText) return
@@ -257,6 +259,98 @@ export function ControlsSidebar({
               label={s.bionicMode ?? 'Bionic Reading'}
               description={s.bionicModeDesc ?? 'Bold the first half of every word to guide the eye'}
             />
+          </Section>
+
+          {/* AI Summary */}
+          <Section
+            title={s.aiSummarySection ?? 'AI Summary'}
+            icon={
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 6h16M4 12h10M4 18h7"/>
+              </svg>
+            }
+            defaultOpen={true}
+          >
+            {/* Length selector */}
+            <div className="space-y-1.5">
+              <p className="text-xs text-slate-400 font-medium">{s.aiSummaryLengthLabel ?? 'Summary length'}</p>
+              <div className="flex gap-1.5">
+                {([
+                  ['brief',    s.aiSummaryBrief    ?? 'Brief'],
+                  ['standard', s.aiSummaryStandard ?? 'Standard'],
+                  ['detailed', s.aiSummaryDetailed ?? 'Detailed'],
+                ] as [SummaryLength, string][]).map(([l, label]) => (
+                  <button
+                    key={l}
+                    onClick={() => { setLength(l); clear() }}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      length === l
+                        ? 'bg-sky-500 text-white shadow-sm'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-sky-100 dark:hover:bg-sky-900/40'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Summarise button */}
+            <button
+              onClick={() => summarize(displayText)}
+              disabled={loading || !hasText}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 text-white text-sm font-semibold shadow-sm hover:from-violet-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                  </svg>
+                  {s.aiSummarySection ?? 'AI Summary'}…
+                </>
+              ) : summary ? (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/>
+                  </svg>
+                  {s.aiResummariseBtn ?? 'Re-summarise'}
+                </>
+              ) : (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M4 6h16M4 12h10M4 18h7"/>
+                  </svg>
+                  {s.aiSummariseBtn ?? 'Summarise Text'}
+                </>
+              )}
+            </button>
+
+            {/* Error */}
+            {error && (
+              <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3 py-2.5 text-xs text-red-600 dark:text-red-400">
+                {error === 'too_short' ? (s.aiSummaryTooShort ?? 'Text is too short to summarise — load a longer passage first.') : error}
+              </div>
+            )}
+
+            {/* Summary result */}
+            {summary && (
+              <div className="space-y-2">
+                <div className="rounded-xl bg-violet-50 dark:bg-violet-900/20 border border-violet-200 dark:border-violet-700 px-3 py-3">
+                  <p className="text-xs font-semibold text-violet-500 dark:text-violet-400 mb-1.5 uppercase tracking-wide">{s.aiSummaryResultLabel ?? 'Summary'}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">{summary}</p>
+                </div>
+                <button
+                  onClick={clear}
+                  className="w-full text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors py-1"
+                >
+                  {s.aiSummaryClear ?? 'Clear summary'}
+                </button>
+              </div>
+            )}
+
+            <p className="text-xs text-slate-400 text-center leading-relaxed">
+              {s.aiSummaryNote ?? 'Extracts the key sentences — works best on articles & passages'}
+            </p>
           </Section>
 
           {/* Font */}

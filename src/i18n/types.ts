@@ -177,6 +177,17 @@ export interface Translations {
     cameraDesc?: string        // "Scan a document with your camera"
     cameraSub?: string         // "Books, letters, menus, signs — anything with text"
     customColorLabel?: string  // "Custom:" (background colour)
+    aiSummarySection?: string     // "AI Summary"
+    aiSummaryLengthLabel?: string // "Summary length"
+    aiSummaryBrief?: string       // "Brief"
+    aiSummaryStandard?: string    // "Standard"
+    aiSummaryDetailed?: string    // "Detailed"
+    aiSummariseBtn?: string       // "Summarise Text"
+    aiResummariseBtn?: string     // "Re-summarise"
+    aiSummaryResultLabel?: string // "Summary"
+    aiSummaryClear?: string       // "Clear summary"
+    aiSummaryNote?: string        // footer note
+    aiSummaryTooShort?: string    // error: text too short
     noTextYet?: string         // "Your text will appear here"
     wordsLabel?: string        // "words"
     minLabel?: string          // "min"
