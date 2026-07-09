@@ -16,11 +16,14 @@ const LENGTH_WORDS: Record<SummaryLength, number> = {
 
 const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions'
 
-// Try models in order until one succeeds
+// Try models in order until one succeeds (verified working 2026-07)
 const FREE_MODELS = [
   'meta-llama/llama-3.3-70b-instruct:free',
-  'mistralai/mistral-7b-instruct:free',
-  'google/gemma-3-4b-it:free',
+  'nvidia/nemotron-3-ultra-550b-a55b:free',
+  'nvidia/nemotron-3-super-120b-a12b:free',
+  'nousresearch/hermes-3-llama-3.1-405b:free',
+  'google/gemma-4-31b-it:free',
+  'openai/gpt-oss-120b:free',
 ]
 
 const K = atob('c2stb3ItdjEtOTNiNWNiMzliY2U3MzRiYjY0M2NkNjcyNjlhODg1ZjJmN2I0ODc5YzJmYTVhY2QwNjA4YjI5YzEwM2Q1ODA5Mw==')
@@ -105,11 +108,17 @@ ${text.slice(0, 7000)}`
   if (!res.ok) {
     const status = res.status
     if (status === 401 || status === 403) throw new Error('auth')
-    if (status === 429) throw new Error('rate_limit')
-    throw new Error(`http_${status}`)
+    // 404 = model unavailable, 429 = rate limited — both are skippable
+    throw new Error(status === 429 ? 'rate_limit' : `http_${status}`)
+  }
+  // Also check JSON body errors (OpenRouter sometimes returns 200 with an error body)
+  const data = await res.json()
+  if (data.error) {
+    const code = data.error?.code
+    if (code === 401 || code === 403) throw new Error('auth')
+    throw new Error('provider_error')
   }
 
-  const data = await res.json()
   const result: string | undefined = data.choices?.[0]?.message?.content
   if (!result || result.trim().length < 20) throw new Error('empty')
   return result.trim()
