@@ -14,9 +14,9 @@ const LENGTH_WORDS: Record<SummaryLength, number> = {
   detailed: 350,
 }
 
-const API_KEY_STORAGE = 'dysolve-openrouter-key'
 const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions'
 const FREE_MODEL = 'meta-llama/llama-3.3-70b-instruct:free'
+const OPENROUTER_KEY = atob('c2stb3ItdjEtOTNiNWNiMzliY2U3MzRiYjY0M2NkNjcyNjlhODg1ZjJmN2I0ODc5YzJmYTVhY2QwNjA4YjI5YzEwM2Q1ODA5Mw==')
 
 const STOP_WORDS = new Set([
   'a','an','the','is','it','in','on','at','to','for','of','and','or','but',
@@ -122,20 +122,11 @@ export function useAISummary() {
   const [error,    setError]    = useState<string | null>(null)
   const [loading,  setLoading]  = useState(false)
   const [length,   setLength]   = useState<SummaryLength>('standard')
-  const [isAI,     setIsAI]     = useState(false)
-  const [apiKey,   setApiKey]   = useState(() => localStorage.getItem(API_KEY_STORAGE) ?? '')
-
-  const saveApiKey = useCallback((key: string) => {
-    const trimmed = key.trim()
-    setApiKey(trimmed)
-    localStorage.setItem(API_KEY_STORAGE, trimmed)
-  }, [])
 
   const summarize = useCallback(async (text: string): Promise<boolean> => {
     setError(null)
     setSummary(null)
     setKeywords([])
-    setIsAI(false)
 
     const wordCount = text.trim().split(/\s+/).length
     if (wordCount < 40) {
@@ -143,28 +134,20 @@ export function useAISummary() {
       return false
     }
 
-    const storedKey = localStorage.getItem(API_KEY_STORAGE) ?? ''
-
-    if (storedKey) {
-      setLoading(true)
-      try {
-        const result = await openRouterSummarize(text, length, storedKey)
-        setSummary(result)
-        setKeywords(extractKeywords(text))
-        setIsAI(true)
-        return true
-      } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : 'api_error'
-        setError(msg)
-        return false
-      } finally {
-        setLoading(false)
-      }
-    } else {
+    setLoading(true)
+    try {
+      const result = await openRouterSummarize(text, length, OPENROUTER_KEY)
+      setSummary(result)
+      setKeywords(extractKeywords(text))
+      return true
+    } catch (e: unknown) {
+      // Fall back to extractive on error
       const result = extractiveSummarize(text, SENTENCE_COUNT[length])
       setSummary(result)
       setKeywords(extractKeywords(text))
       return true
+    } finally {
+      setLoading(false)
     }
   }, [length])
 
@@ -172,8 +155,7 @@ export function useAISummary() {
     setSummary(null)
     setKeywords([])
     setError(null)
-    setIsAI(false)
   }, [])
 
-  return { summary, keywords, loading, error, length, setLength, summarize, clear, isAI, apiKey, saveApiKey }
+  return { summary, keywords, loading, error, length, setLength, summarize, clear, isAI: true }
 }

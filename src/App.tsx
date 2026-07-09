@@ -36,7 +36,7 @@ function AppInner() {
   const [ttsRate, setTtsRate] = useState(0.88)
   const [showPreferences, setShowPreferences] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 640)
   const [isDark, setIsDark] = useState(() => localStorage.getItem('readease-dark') === '1')
   const [streak, setStreak] = useState(() => getStreak())
 

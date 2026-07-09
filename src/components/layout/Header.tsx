@@ -18,7 +18,7 @@ export function Header({ hasText, onShowInput, onHome, onScreening, onTests, onO
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-900/95 border-b border-slate-100 dark:border-slate-700 shadow-sm">
-      <div className="max-w-screen-xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-2">
         <button
           onClick={onHome}
           className="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -29,13 +29,13 @@ export function Header({ hasText, onShowInput, onHome, onScreening, onTests, onO
             alt="Dysolve logo"
             className="w-11 h-11 rounded-full object-cover ring-2 ring-sky-200 shadow-md shrink-0"
           />
-          <span className="text-xl font-bold text-blue-900 dark:text-sky-400 tracking-tight">Dysolve</span>
+          <span className="text-lg sm:text-xl font-bold text-blue-900 dark:text-sky-400 tracking-tight truncate">Dysolve</span>
           <span className="hidden sm:inline text-xs text-slate-400 dark:text-slate-500 font-medium bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
             {t.nav.tagline ?? 'Dyslexia-Friendly Reader'}
           </span>
         </button>
 
-        <nav className="flex items-center gap-2">
+        <nav className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           {/* Start Reading button — always visible */}
           <button
             onClick={onShowInput}
@@ -67,10 +67,10 @@ export function Header({ hasText, onShowInput, onHome, onScreening, onTests, onO
             <span className="hidden sm:inline">{t.nav.allTests ?? 'All Tests'}</span>
           </button>
           <LanguageSelector />
-          {/* Keyboard shortcuts */}
+          {/* Keyboard shortcuts — desktop only */}
           <button
             onClick={onShowShortcuts}
-            className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-600 font-semibold text-sm"
+            className="hidden sm:flex items-center justify-center w-9 h-9 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-600 font-semibold text-sm"
             aria-label="Keyboard shortcuts"
             title="Keyboard shortcuts (?)"
           >
