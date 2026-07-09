@@ -249,8 +249,8 @@ export function SummaryModal({ summary, keywords, isAI = false, onClose }: Summa
         <div className="px-5 py-3 border-t border-slate-100 dark:border-slate-800 flex-shrink-0 bg-gradient-to-r from-violet-50/60 to-purple-50/60 dark:from-violet-950/30 dark:to-purple-950/30">
           <p className="text-xs text-slate-400 text-center">
             {isAI
-              ? 'Summarised by Google Gemini AI — genuinely synthesised, not extracted'
-              : (s.aiSummaryNote ?? 'Extracts the key sentences — add a Gemini API key for real AI summaries')}
+              ? 'Summarised by OpenRouter AI (free) — genuinely synthesised, not extracted'
+              : (s.aiSummaryNote ?? 'Extracts key sentences — add an OpenRouter key for real AI summaries')}
           </p>
         </div>
       </div>
