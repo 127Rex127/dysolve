@@ -115,7 +115,7 @@ export function ControlsSidebar({
   const { t } = useLanguage()
   const s = t.sidebar
   const [copied, setCopied] = useState(false)
-  const { summary, keywords, loading, error, length, setLength, summarize, clear } = useAISummary()
+  const { summary, keywords, loading, error, length, setLength, summarize, clear, isAI } = useAISummary()
   const [showSummaryModal, setShowSummaryModal] = useState(false)
 
   function handleShare() {
@@ -364,11 +364,9 @@ export function ControlsSidebar({
             {/* Error */}
             {error && (
               <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 px-3 py-2.5 text-xs text-red-600 dark:text-red-400">
-                {error === 'too_short'      ? (s.aiSummaryTooShort ?? 'Text is too short to summarise — load a longer passage first.')
-                : error === 'invalid_key'   ? 'Invalid Gemini API key. Check your key and try again.'
-                : error === 'rate_limit'    ? 'Gemini rate limit reached. Wait a moment and try again.'
-                : error === 'empty_response'? 'Received an empty response from Gemini. Try again.'
-                : 'Gemini API error. Check your connection and try again.'}
+                {error === 'too_short'
+                  ? (s.aiSummaryTooShort ?? 'Text is too short to summarise — load a longer passage first.')
+                  : error}
               </div>
             )}
 
@@ -584,7 +582,7 @@ export function ControlsSidebar({
         <SummaryModal
           summary={summary}
           keywords={keywords}
-          isAI={true}
+          isAI={isAI}
           onClose={() => setShowSummaryModal(false)}
         />
       )}

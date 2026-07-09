@@ -15,8 +15,15 @@ const LENGTH_WORDS: Record<SummaryLength, number> = {
 }
 
 const OPENROUTER_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions'
-const FREE_MODEL = 'meta-llama/llama-3.3-70b-instruct:free'
-const OPENROUTER_KEY = atob('c2stb3ItdjEtOTNiNWNiMzliY2U3MzRiYjY0M2NkNjcyNjlhODg1ZjJmN2I0ODc5YzJmYTVhY2QwNjA4YjI5YzEwM2Q1ODA5Mw==')
+
+// Try models in order until one succeeds
+const FREE_MODELS = [
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'mistralai/mistral-7b-instruct:free',
+  'google/gemma-3-4b-it:free',
+]
+
+const K = atob('c2stb3ItdjEtOTNiNWNiMzliY2U3MzRiYjY0M2NkNjcyNjlhODg1ZjJmN2I0ODc5YzJmYTVhY2QwNjA4YjI5YzEwM2Q1ODA5Mw==')
 
 const STOP_WORDS = new Set([
   'a','an','the','is','it','in','on','at','to','for','of','and','or','but',
@@ -47,72 +54,64 @@ function extractiveSummarize(text: string, numSentences: number): string {
   const sentences = splitSentences(text)
   if (sentences.length === 0) return text.trim()
   if (sentences.length <= numSentences) return sentences.join(' ')
-
   const freq: Record<string, number> = {}
-  sentences.forEach(s => {
-    tokenize(s).forEach(w => { freq[w] = (freq[w] ?? 0) + 1 })
-  })
+  sentences.forEach(s => { tokenize(s).forEach(w => { freq[w] = (freq[w] ?? 0) + 1 }) })
   const maxFreq = Math.max(1, ...Object.values(freq))
-
   const scored = sentences.map((s, i) => {
     const words = tokenize(s)
     if (words.length === 0) return { s, i, score: 0 }
     const termScore = words.reduce((sum, w) => sum + (freq[w] ?? 0) / maxFreq, 0) / words.length
     const relPos = i / (sentences.length - 1)
     const posBoost = relPos < 0.2 ? 1.4 : relPos > 0.8 ? 1.15 : 1.0
-    const lengthFactor = Math.min(1, words.length / 10)
-    return { s, i, score: termScore * posBoost * lengthFactor }
+    return { s, i, score: termScore * posBoost * Math.min(1, words.length / 10) }
   })
-
-  const top = scored
-    .slice()
-    .sort((a, b) => b.score - a.score)
-    .slice(0, numSentences)
-    .sort((a, b) => a.i - b.i)
-
-  return top.map(x => x.s).join(' ')
+  return scored.slice().sort((a, b) => b.score - a.score).slice(0, numSentences).sort((a, b) => a.i - b.i).map(x => x.s).join(' ')
 }
 
 function extractKeywords(text: string, n = 5): string[] {
   const freq: Record<string, number> = {}
   tokenize(text).forEach(w => { freq[w] = (freq[w] ?? 0) + 1 })
-  return Object.entries(freq)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, n)
-    .map(([w]) => w)
+  return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, n).map(([w]) => w)
 }
 
-async function openRouterSummarize(text: string, length: SummaryLength, apiKey: string): Promise<string> {
+async function callOpenRouter(text: string, length: SummaryLength, model: string): Promise<string> {
   const wordTarget = LENGTH_WORDS[length]
-  const prompt = `Write a clear, engaging ${wordTarget}-word summary of the following text. Write in natural flowing prose — no bullet points, no lists, no headings. Capture the core ideas, key facts, and main conclusions in your own words. Return only the summary text, nothing else.\n\n${text.slice(0, 8000)}`
+  const prompt = `You are a skilled summariser. Write a clear, flowing ${wordTarget}-word summary of the text below. Important rules:
+- Write in YOUR OWN WORDS — do not copy sentences from the text
+- Use natural prose, no bullet points or lists
+- Capture the core ideas and conclusions
+- Return ONLY the summary text, nothing else
+
+Text to summarise:
+${text.slice(0, 7000)}`
 
   const res = await fetch(OPENROUTER_ENDPOINT, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
+      'Authorization': `Bearer ${K}`,
       'HTTP-Referer': window.location.origin,
       'X-Title': 'Dysolve',
     },
     body: JSON.stringify({
-      model: FREE_MODEL,
+      model,
       messages: [{ role: 'user', content: prompt }],
-      max_tokens: wordTarget * 3,
-      temperature: 0.4,
+      max_tokens: wordTarget * 4,
+      temperature: 0.5,
     }),
-    signal: AbortSignal.timeout(30000),
+    signal: AbortSignal.timeout(25000),
   })
 
   if (!res.ok) {
     const status = res.status
-    if (status === 401 || status === 403) throw new Error('invalid_key')
+    if (status === 401 || status === 403) throw new Error('auth')
     if (status === 429) throw new Error('rate_limit')
-    throw new Error('api_error')
+    throw new Error(`http_${status}`)
   }
 
   const data = await res.json()
-  const result = data.choices?.[0]?.message?.content
-  if (!result) throw new Error('empty_response')
+  const result: string | undefined = data.choices?.[0]?.message?.content
+  if (!result || result.trim().length < 20) throw new Error('empty')
   return result.trim()
 }
 
@@ -122,11 +121,13 @@ export function useAISummary() {
   const [error,    setError]    = useState<string | null>(null)
   const [loading,  setLoading]  = useState(false)
   const [length,   setLength]   = useState<SummaryLength>('standard')
+  const [isAI,     setIsAI]     = useState(false)
 
   const summarize = useCallback(async (text: string): Promise<boolean> => {
     setError(null)
     setSummary(null)
     setKeywords([])
+    setIsAI(false)
 
     const wordCount = text.trim().split(/\s+/).length
     if (wordCount < 40) {
@@ -135,17 +136,34 @@ export function useAISummary() {
     }
 
     setLoading(true)
+    let lastError = ''
+
     try {
-      const result = await openRouterSummarize(text, length, OPENROUTER_KEY)
-      setSummary(result)
-      setKeywords(extractKeywords(text))
-      return true
-    } catch (e: unknown) {
-      // Fall back to extractive on error
-      const result = extractiveSummarize(text, SENTENCE_COUNT[length])
-      setSummary(result)
-      setKeywords(extractKeywords(text))
-      return true
+      // Try each model in sequence
+      for (const model of FREE_MODELS) {
+        try {
+          const result = await callOpenRouter(text, length, model)
+          setSummary(result)
+          setKeywords(extractKeywords(text))
+          setIsAI(true)
+          return true
+        } catch (e: unknown) {
+          lastError = e instanceof Error ? e.message : 'unknown'
+          // Auth failure — no point trying other models
+          if (lastError === 'auth') break
+          // Otherwise try next model
+          continue
+        }
+      }
+
+      // All models failed — show error, no silent extractive fallback
+      setError(lastError === 'auth'
+        ? 'API key invalid. Contact support.'
+        : lastError === 'rate_limit'
+        ? 'AI rate limit reached. Please wait a moment and try again.'
+        : `AI unavailable (${lastError}). Please try again shortly.`)
+      return false
+
     } finally {
       setLoading(false)
     }
@@ -155,7 +173,8 @@ export function useAISummary() {
     setSummary(null)
     setKeywords([])
     setError(null)
+    setIsAI(false)
   }, [])
 
-  return { summary, keywords, loading, error, length, setLength, summarize, clear, isAI: true }
+  return { summary, keywords, loading, error, length, setLength, summarize, clear, isAI }
 }

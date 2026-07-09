@@ -1,16 +1,36 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef } from 'react'
 import { playSound, SoundId, SoundHandle } from '../utils/soundEngine'
+
+function createContext(volume: number): { ctx: AudioContext; master: GainNode } {
+  const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+  const ctx = new AudioCtx()
+  const master = ctx.createGain()
+  master.gain.value = volume
+  master.connect(ctx.destination)
+  return { ctx, master }
+}
+
+// Play a silent 1-frame buffer — required to unlock audio on iOS/Safari
+function unlockContext(ctx: AudioContext) {
+  try {
+    const buf = ctx.createBuffer(1, 1, ctx.sampleRate)
+    const src = ctx.createBufferSource()
+    src.buffer = buf
+    src.connect(ctx.destination)
+    src.start(0)
+  } catch { /* ignore */ }
+}
 
 export function useAmbientSound() {
   const [activeSoundId, setActiveSoundId] = useState<SoundId | null>(null)
   const [volume, setVolumeState] = useState(0.5)
   const [error, setError] = useState<string | null>(null)
 
-  const ctxRef = useRef<AudioContext | null>(null)
+  const ctxRef    = useRef<AudioContext | null>(null)
   const masterRef = useRef<GainNode | null>(null)
   const handleRef = useRef<SoundHandle | null>(null)
-  const activeIdRef = useRef<SoundId | null>(null)
-  const volumeRef = useRef(0.5)
+  const activeRef = useRef<SoundId | null>(null)
+  const volRef    = useRef(0.5)
 
   function stopCurrent() {
     if (handleRef.current) {
@@ -19,84 +39,72 @@ export function useAmbientSound() {
     }
   }
 
-  // Ensure a running AudioContext — call synchronously in user gesture
-  function ensureContext(): AudioContext {
-    if (!ctxRef.current || ctxRef.current.state === 'closed') {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-      const ctx = new AudioCtx()
-      const gain = ctx.createGain()
-      gain.gain.value = volumeRef.current
-      gain.connect(ctx.destination)
-      ctxRef.current = ctx
-      masterRef.current = gain
-    }
-    return ctxRef.current
-  }
-
-  const play = useCallback((id: SoundId) => {
+  function play(id: SoundId) {
     setError(null)
     stopCurrent()
 
-    if (activeIdRef.current === id) {
-      activeIdRef.current = null
+    // Toggle off if same sound tapped again
+    if (activeRef.current === id) {
+      activeRef.current = null
       setActiveSoundId(null)
       return
     }
 
     try {
-      // Create / reuse context synchronously (must stay in user gesture callstack)
-      const ctx = ensureContext()
+      // (Re)create context if missing or closed — MUST stay in the synchronous
+      // user-gesture callstack for autoplay policy on mobile browsers
+      if (!ctxRef.current || ctxRef.current.state === 'closed') {
+        const { ctx, master } = createContext(volRef.current)
+        ctxRef.current = ctx
+        masterRef.current = master
+      }
+
+      const ctx    = ctxRef.current
       const master = masterRef.current!
 
-      // Resume if suspended — fire and don't await so we stay in the gesture context
-      const startPlayback = () => {
+      // Unlock audio — required on iOS Safari before any real sound will play
+      unlockContext(ctx)
+
+      // Resume suspended context then play
+      const doPlay = () => {
         if (ctx.state !== 'running') {
-          setError('Audio blocked by browser — tap again to unlock.')
-          activeIdRef.current = null
+          setError('Audio is blocked — tap the button once more to start.')
+          activeRef.current = null
           setActiveSoundId(null)
           return
         }
-        try {
-          handleRef.current = playSound(ctx, id, master)
-          activeIdRef.current = id
-          setActiveSoundId(id)
-        } catch (err) {
-          console.error('[Ambient] playSound error:', err)
-          setError('Could not start sound. Please try again.')
-          activeIdRef.current = null
-          setActiveSoundId(null)
-        }
+        handleRef.current = playSound(ctx, id, master)
+        activeRef.current = id
+        setActiveSoundId(id)
       }
 
       if (ctx.state === 'suspended') {
-        ctx.resume().then(startPlayback).catch(() => {
-          setError('Audio blocked by browser — tap again to unlock.')
-          activeIdRef.current = null
+        ctx.resume().then(doPlay).catch(() => {
+          setError('Audio blocked by browser — tap again to start.')
+          activeRef.current = null
           setActiveSoundId(null)
         })
       } else {
-        startPlayback()
+        doPlay()
       }
     } catch (err) {
       console.error('[Ambient] play error:', err)
       setError('Could not start audio. Try tapping again.')
-      activeIdRef.current = null
+      activeRef.current = null
       setActiveSoundId(null)
     }
-  }, [])
+  }
 
   function stop() {
     stopCurrent()
-    activeIdRef.current = null
+    activeRef.current = null
     setActiveSoundId(null)
   }
 
   function setVolume(v: number) {
-    volumeRef.current = v
+    volRef.current = v
     setVolumeState(v)
-    if (masterRef.current) {
-      masterRef.current.gain.value = v
-    }
+    if (masterRef.current) masterRef.current.gain.value = v
   }
 
   return { activeSoundId, volume, play, stop, setVolume, error }
