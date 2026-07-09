@@ -280,7 +280,26 @@ export function WordDefinitionPopup({
             )}
 
             {state.sourceLang === 'en' && state.targetLang === 'en' && state.entries?.[0]?.phonetic && (
-              <p className="text-xs text-sky-500 font-mono">{state.entries[0].phonetic}</p>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-400">How to say it:</span>
+                <span className="text-xs text-sky-500 font-mono">{state.entries[0].phonetic}</span>
+                <button
+                  onClick={() => {
+                    const u = new SpeechSynthesisUtterance(word)
+                    u.lang = 'en-US'
+                    u.rate = 0.8
+                    window.speechSynthesis.cancel()
+                    window.speechSynthesis.speak(u)
+                  }}
+                  title="Hear pronunciation"
+                  className="flex items-center justify-center w-6 h-6 rounded-full bg-sky-100 hover:bg-sky-200 text-sky-600 transition-colors"
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
             )}
 
             {state.entries && state.entries.length > 0 && (
