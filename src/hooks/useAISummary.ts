@@ -77,16 +77,42 @@ function extractKeywords(text: string, n = 5): string[] {
   return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, n).map(([w]) => w)
 }
 
+// Strip model "thinking" leakage — some free models output their reasoning
+// before the actual answer. We look for the first clean prose paragraph.
+function cleanOutput(raw: string): string {
+  // If model wrapped the answer in quotes, extract that
+  const quoted = raw.match(/[“”"]([A-Z][^""“”]{80,})[“”"]/)
+  if (quoted) return quoted[1].trim()
+
+  // Split into lines, drop lines that look like meta-commentary / word-counting
+  const THINKING_PATTERNS = [
+    /^(let'?s|we'?ll|we need|i'?ll|draft:|count|now count|paragraph:|okay|alright|here'?s|sure[,!]?$)/i,
+    /\bword(s)?\b.*\bcount\b/i,
+    /\bcount\b.*\bword(s)?\b/i,
+    /^\d+[\.\)]\s/,   // numbered lists
+    /^[-•]\s/,        // bullet points
+    /\(\d+\)/,        // (1) (2) inline counting
+  ]
+  const lines = raw.split('\n').map(l => l.trim()).filter(Boolean)
+  const clean = lines.filter(l => !THINKING_PATTERNS.some(p => p.test(l)))
+
+  // Return the longest contiguous run of prose lines
+  let best = '', cur = ''
+  for (const l of clean) {
+    cur += (cur ? ' ' : '') + l
+    if (l.endsWith('.') || l.endsWith('?') || l.endsWith('!')) {
+      if (cur.length > best.length) best = cur
+      cur = ''
+    }
+  }
+  if (cur.length > best.length) best = cur
+  return best.trim() || clean.join(' ').trim()
+}
+
 async function callOpenRouter(text: string, length: SummaryLength, model: string): Promise<string> {
   const wordTarget = LENGTH_WORDS[length]
-  const prompt = `You are a skilled summariser. Write a clear, flowing ${wordTarget}-word summary of the text below. Important rules:
-- Write in YOUR OWN WORDS — do not copy sentences from the text
-- Use natural prose, no bullet points or lists
-- Capture the core ideas and conclusions
-- Return ONLY the summary text, nothing else
-
-Text to summarise:
-${text.slice(0, 7000)}`
+  const systemMsg = 'You are a summariser. Output ONLY the summary paragraph — no preamble, no word counting, no reasoning, no meta-commentary. Start directly with the first word of the summary.'
+  const userMsg = `Write a ${wordTarget}-word summary of the text below in your own words. Natural flowing prose, no bullet points, no lists, no headers. Capture the core ideas. Output only the summary, nothing else.\n\nText:\n${text.slice(0, 7000)}`
 
   const res = await fetch(OPENROUTER_ENDPOINT, {
     method: 'POST',
@@ -98,9 +124,12 @@ ${text.slice(0, 7000)}`
     },
     body: JSON.stringify({
       model,
-      messages: [{ role: 'user', content: prompt }],
+      messages: [
+        { role: 'system', content: systemMsg },
+        { role: 'user', content: userMsg },
+      ],
       max_tokens: wordTarget * 4,
-      temperature: 0.5,
+      temperature: 0.4,
     }),
     signal: AbortSignal.timeout(25000),
   })
@@ -108,20 +137,35 @@ ${text.slice(0, 7000)}`
   if (!res.ok) {
     const status = res.status
     if (status === 401 || status === 403) throw new Error('auth')
-    // 404 = model unavailable, 429 = rate limited — both are skippable
-    throw new Error(status === 429 ? 'rate_limit' : `http_${status}`)
+    if (status === 429) {
+      // Parse retry_after from body so caller can wait the right amount
+      const body = await res.json().catch(() => ({}))
+      const retryAfter: number = body?.error?.metadata?.retry_after_seconds ?? 5
+      const err = new Error('rate_limit') as Error & { retryAfter: number }
+      err.retryAfter = Math.min(Math.ceil(retryAfter), 12)
+      throw err
+    }
+    throw new Error(`http_${status}`)
   }
   // Also check JSON body errors (OpenRouter sometimes returns 200 with an error body)
   const data = await res.json()
   if (data.error) {
     const code = data.error?.code
     if (code === 401 || code === 403) throw new Error('auth')
+    if (code === 429) {
+      const retryAfter: number = data.error?.metadata?.retry_after_seconds ?? 5
+      const err = new Error('rate_limit') as Error & { retryAfter: number }
+      err.retryAfter = Math.min(Math.ceil(retryAfter), 12)
+      throw err
+    }
     throw new Error('provider_error')
   }
 
-  const result: string | undefined = data.choices?.[0]?.message?.content
-  if (!result || result.trim().length < 20) throw new Error('empty')
-  return result.trim()
+  const raw: string | undefined = data.choices?.[0]?.message?.content
+  if (!raw || raw.trim().length < 20) throw new Error('empty')
+  const result = cleanOutput(raw)
+  if (!result || result.length < 20) throw new Error('empty')
+  return result
 }
 
 export function useAISummary() {
@@ -148,7 +192,7 @@ export function useAISummary() {
     let lastError = ''
 
     try {
-      // Try each model in sequence
+      // Try each model in sequence; on rate-limit wait before next model
       for (const model of FREE_MODELS) {
         try {
           const result = await callOpenRouter(text, length, model)
@@ -157,10 +201,13 @@ export function useAISummary() {
           setIsAI(true)
           return true
         } catch (e: unknown) {
-          lastError = e instanceof Error ? e.message : 'unknown'
-          // Auth failure — no point trying other models
+          const err = e as Error & { retryAfter?: number }
+          lastError = err.message ?? 'unknown'
           if (lastError === 'auth') break
-          // Otherwise try next model
+          // On rate-limit, wait the recommended time before trying next model
+          if (lastError === 'rate_limit' && err.retryAfter) {
+            await new Promise(r => setTimeout(r, err.retryAfter! * 1000))
+          }
           continue
         }
       }
