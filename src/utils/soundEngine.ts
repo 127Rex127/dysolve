@@ -125,7 +125,11 @@ export function playSound(
 
     case 'white-noise': {
       const src = loopSrc(ctx, whiteBuffer(ctx))
-      src.connect(master)
+      // Gentle highcut to soften harsh top end
+      const lpf = ctx.createBiquadFilter()
+      lpf.type = 'lowpass'
+      lpf.frequency.value = 7000
+      src.connect(lpf); lpf.connect(master)
       src.start()
       cleanups.push(() => safeStop(src))
       break
@@ -154,19 +158,19 @@ export function playSound(
     // ── Rain family ──────────────────────────────────────────────────────────
 
     case 'light-rain': {
-      // Soft pink noise base
+      // Soft pink noise base — HPF at 600 Hz (was 1400) keeps warmth
       const base = loopSrc(ctx, pinkBuffer(ctx, 4))
       const hpf = ctx.createBiquadFilter()
       hpf.type = 'highpass'
-      hpf.frequency.value = 1400
+      hpf.frequency.value = 600
       const amp = ctx.createGain()
-      amp.gain.value = 0.55
-      const [lfoOsc, lfoG] = lfo(ctx, 2, 0.12)
+      amp.gain.value = 0.45
+      const [lfoOsc, lfoG] = lfo(ctx, 2, 0.10)
       lfoG.connect(amp.gain)
       base.connect(hpf); hpf.connect(amp); amp.connect(master)
       base.start()
 
-      // Individual drip layer — random short noise bursts
+      // Individual drip layer — lowered from 2000-5000 Hz to 500-1800 Hz
       let stopped = false
       let dripTimer: ReturnType<typeof setTimeout> | null = null
       const dripBuf = whiteBuffer(ctx, 0.08)
@@ -177,9 +181,9 @@ export function playSound(
         const g = ctx.createGain()
         const f = ctx.createBiquadFilter()
         f.type = 'bandpass'
-        f.frequency.value = 2000 + Math.random() * 3000
-        f.Q.value = 3
-        g.gain.setValueAtTime(0.15 + Math.random() * 0.25, ctx.currentTime)
+        f.frequency.value = 500 + Math.random() * 1300
+        f.Q.value = 2
+        g.gain.setValueAtTime(0.12 + Math.random() * 0.18, ctx.currentTime)
         g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08)
         d.connect(f); f.connect(g); g.connect(master)
         d.start()
@@ -196,7 +200,7 @@ export function playSound(
       const src = loopSrc(ctx, pinkBuffer(ctx, 4))
       const hpf = ctx.createBiquadFilter()
       hpf.type = 'highpass'
-      hpf.frequency.value = 700
+      hpf.frequency.value = 300
       // Second layer — low rumble of heavy downpour
       const src2 = loopSrc(ctx, brownBuffer(ctx, 3))
       const lpf2 = ctx.createBiquadFilter()
@@ -220,7 +224,7 @@ export function playSound(
       const src = loopSrc(ctx, pinkBuffer(ctx, 4))
       const hpf = ctx.createBiquadFilter()
       hpf.type = 'highpass'
-      hpf.frequency.value = 900
+      hpf.frequency.value = 400
       const amp = ctx.createGain()
       amp.gain.value = 1.0
       const [lfoOsc, lfoG] = lfo(ctx, 3.5, 0.25)
@@ -262,20 +266,20 @@ export function playSound(
     }
 
     case 'rain-roof': {
-      // Higher-frequency metallic impacts — rain on tin/corrugated roof
+      // Metallic impacts — lowered from 3500 to 1800 Hz for warmth
       const base = loopSrc(ctx, whiteBuffer(ctx, 3))
       const bpf = ctx.createBiquadFilter()
       bpf.type = 'bandpass'
-      bpf.frequency.value = 3500
-      bpf.Q.value = 0.8
+      bpf.frequency.value = 1800
+      bpf.Q.value = 0.7
       const baseGain = ctx.createGain()
-      baseGain.gain.value = 0.5
-      const [lfoOsc, lfoG] = lfo(ctx, 5, 0.3)
+      baseGain.gain.value = 0.4
+      const [lfoOsc, lfoG] = lfo(ctx, 4, 0.25)
       lfoG.connect(baseGain.gain)
       base.connect(bpf); bpf.connect(baseGain); baseGain.connect(master)
       base.start()
 
-      // Heavier drop "ticks" — metallic thud of larger drops
+      // Heavier drop "ticks" — lowered from 1800-3800 to 700-1800 Hz
       let stopped = false
       let tickTimer: ReturnType<typeof setTimeout> | null = null
       const tickBuf = whiteBuffer(ctx, 0.05)
@@ -286,8 +290,8 @@ export function playSound(
         const tGain = ctx.createGain()
         const tBpf = ctx.createBiquadFilter()
         tBpf.type = 'bandpass'
-        tBpf.frequency.value = 1800 + Math.random() * 2000
-        tBpf.Q.value = 5
+        tBpf.frequency.value = 700 + Math.random() * 1100
+        tBpf.Q.value = 4
         tGain.gain.setValueAtTime(0.4 + Math.random() * 0.5, ctx.currentTime)
         tGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05)
         t.connect(tBpf); tBpf.connect(tGain); tGain.connect(master)
@@ -334,25 +338,25 @@ export function playSound(
     }
 
     case 'stream': {
-      // Gurgling bandpass white noise
+      // Gurgling bandpass white noise — lowered from 1600→800 Hz for warmth
       const src = loopSrc(ctx, whiteBuffer(ctx, 4))
       const bpf = ctx.createBiquadFilter()
       bpf.type = 'bandpass'
-      bpf.frequency.value = 1600
+      bpf.frequency.value = 800
       bpf.Q.value = 0.35
       const amp = ctx.createGain()
-      amp.gain.value = 1.3
-      const [lfoOsc, lfoG] = lfo(ctx, 1.0, 0.18)
+      amp.gain.value = 1.0
+      const [lfoOsc, lfoG] = lfo(ctx, 1.0, 0.15)
       lfoG.connect(amp.gain)
 
-      // Second gurgle layer, slightly offset
+      // Second gurgle layer — lowered from 2600→1300 Hz
       const src2 = loopSrc(ctx, whiteBuffer(ctx, 3))
       const bpf2 = ctx.createBiquadFilter()
       bpf2.type = 'bandpass'
-      bpf2.frequency.value = 2600
-      bpf2.Q.value = 0.6
+      bpf2.frequency.value = 1300
+      bpf2.Q.value = 0.5
       const amp2 = ctx.createGain()
-      amp2.gain.value = 0.5
+      amp2.gain.value = 0.35
       const [lfoOsc2, lfoG2] = lfo(ctx, 1.7, 0.2)
       lfoG2.connect(amp2.gain)
 
@@ -546,33 +550,34 @@ export function playSound(
     }
 
     case 'crickets': {
-      // Two layers for chorus effect
+      // Lowered all cricket frequencies — was 5200/4700/6000, now 3200/2800/4000
+      // Still recognisably cricket-like but much less shrill
       const src = loopSrc(ctx, whiteBuffer(ctx, 3))
       const bpf = ctx.createBiquadFilter()
       bpf.type = 'bandpass'
-      bpf.frequency.value = 5200; bpf.Q.value = 6
+      bpf.frequency.value = 3200; bpf.Q.value = 5
       const amp = ctx.createGain()
-      amp.gain.value = 0.8
-      const [lfoOsc, lfoG] = lfo(ctx, 19, 0.72)
+      amp.gain.value = 0.65
+      const [lfoOsc, lfoG] = lfo(ctx, 18, 0.60)
       lfoG.connect(amp.gain)
 
       const src2 = loopSrc(ctx, whiteBuffer(ctx, 3))
       const bpf2 = ctx.createBiquadFilter()
       bpf2.type = 'bandpass'
-      bpf2.frequency.value = 4700; bpf2.Q.value = 6
+      bpf2.frequency.value = 2800; bpf2.Q.value = 5
       const amp2 = ctx.createGain()
-      amp2.gain.value = 0.55
-      const [lfoOsc2, lfoG2] = lfo(ctx, 21.5, 0.68)
+      amp2.gain.value = 0.45
+      const [lfoOsc2, lfoG2] = lfo(ctx, 20, 0.55)
       lfoG2.connect(amp2.gain)
 
       // Third distant layer for depth
       const src3 = loopSrc(ctx, whiteBuffer(ctx, 4))
       const bpf3 = ctx.createBiquadFilter()
       bpf3.type = 'bandpass'
-      bpf3.frequency.value = 6000; bpf3.Q.value = 7
+      bpf3.frequency.value = 4000; bpf3.Q.value = 6
       const amp3 = ctx.createGain()
-      amp3.gain.value = 0.25
-      const [lfoOsc3, lfoG3] = lfo(ctx, 17.5, 0.6)
+      amp3.gain.value = 0.20
+      const [lfoOsc3, lfoG3] = lfo(ctx, 16, 0.50)
       lfoG3.connect(amp3.gain)
 
       src.connect(bpf); bpf.connect(amp); amp.connect(master)
