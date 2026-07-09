@@ -287,7 +287,21 @@ export function WordDefinitionPopup({
                   onClick={() => {
                     const u = new SpeechSynthesisUtterance(word)
                     u.lang = 'en-US'
-                    u.rate = 0.8
+                    u.rate = 0.75
+                    u.pitch = 1.0
+                    // Prefer high-quality neural/natural voices over the robotic default
+                    const voices = window.speechSynthesis.getVoices()
+                    const preferred = voices.find(v =>
+                      v.lang.startsWith('en') && (
+                        v.name.includes('Google') ||
+                        v.name.includes('Neural') ||
+                        v.name.includes('Natural') ||
+                        v.name.includes('Premium') ||
+                        v.name.includes('Samantha') ||
+                        v.name.includes('Daniel')
+                      )
+                    ) ?? voices.find(v => v.lang.startsWith('en') && v.localService) ?? null
+                    if (preferred) u.voice = preferred
                     window.speechSynthesis.cancel()
                     window.speechSynthesis.speak(u)
                   }}
